@@ -1,0 +1,111 @@
+{
+  "common": {
+    "search": "Search",
+    "new": "New",
+    "export_excel": "Export Excel",
+    "actions": "Actions",
+    "cancel": "Cancel",
+    "save": "Save",
+    "showing": "Showing",
+    "yes": "Yes",
+    "no": "No",
+    "add": "Add",
+    "of": "of",
+    "download": "Download",
+    "back": "Back",
+    "error": "Error",
+    "warning": "Warning",
+    "failed_to_load_data": "Failed to load data",
+    "all": "All",
+    "call": "Call",
+    "meeting": "Meeting",
+    "task": "Task",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "this_week": "This week",
+    "next_week": "Next week",
+    "overdue": "Overdue",
+    "done": "Done",
+    "close": "Close",
+    "edit": "Edit",
+    "in_progress": "In Progress",
+    "delete": "Delete",
+    "delete_confirm": "Delete Confirm",
+    "delete_message": "are you sure you want to delete this element ?",
+    "name_required": "name is required",
+    "category_required": "category is required",
+    "validation": "Validation",
+    "reset": "Reset",
+    "to": "to",
+    "this_page_is_still_under_development": "This Page is still under development",
+    "some_features_may_not_be_fully_functional": "Some features may not be fully functional"
+  },
+  "app_pages": {
+    "title": "Roles Management",
+    "users": "Users"
+
+  },
+  "users":{
+    "title": "Users",
+    "users": "Users",
+    "add_user": "Add User",
+    "username":"Username",
+    "email":"Email",
+    "is_active":"Is Active"
+  },
+  "home": {
+    "title": "Home",
+    "dashboard": "Dashboard"
+  },
+  "ui_components": {
+    "title": "UI Components",
+    "form_layout": "Form Layout",
+    "input": "Input",
+    "button": "Button",
+    "table": "Table",
+    "list": "List",
+    "tree": "Tree",
+    "panel": "Panel",
+    "overlay": "Overlay",
+    "media": "Media",
+    "menu": "Menu",
+    "message": "Message",
+    "file": "File",
+    "chart": "Chart",
+    "timeline": "Timeline",
+    "misc": "Misc"
+  },
+  "pages": {
+    "title": "Pages",
+    "landing": "Landing Page",
+    "auth": "Authentication",
+    "login": "Login",
+    "error": "Error",
+    "access_denied": "Access Denied",
+    "crud": "CRUD",
+    "not_found": "Not Found",
+    "empty": "Empty"
+  },
+  "hierarchy": {
+    "title": "Hierarchy",
+    "submenu_1": "Submenu 1",
+    "submenu_1_1": "Submenu 1.1",
+    "submenu_1_1_1": "Submenu 1.1.1",
+    "submenu_1_1_2": "Submenu 1.1.2",
+    "submenu_1_1_3": "Submenu 1.1.3",
+    "submenu_1_2": "Submenu 1.2",
+    "submenu_1_2_1": "Submenu 1.2.1",
+    "submenu_2": "Submenu 2",
+    "submenu_2_1": "Submenu 2.1",
+    "submenu_2_1_1": "Submenu 2.1.1",
+    "submenu_2_1_2": "Submenu 2.1.2",
+    "submenu_2_2": "Submenu 2.2",
+    "submenu_2_2_1": "Submenu 2.2.1"
+  },
+  "get_started": {
+    "title": "Get Started",
+    "documentation": "Documentation",
+    "view_source": "View Source"
+  }
+  
+}

@@ -1,0 +1,165 @@
+<p-toast />
+<app-loading-spinner [loading]="loading()"></app-loading-spinner>
+@if (!loading()) {
+<div>
+  <p-toolbar styleClass="mb-6">
+    <ng-template #start>
+      <p-button label="{{'users.add_user' |translate}}" icon="pi pi-plus" severity="secondary"
+        (onClick)="onAddUser()" />
+    </ng-template>
+    <ng-template #end>
+      <!-- <p-button label="{{'users.export_excel' | translate}}" icon="pi pi-upload" severity="secondary"
+        (onClick)="exportCSV()" /> -->
+    </ng-template>
+  </p-toolbar>
+  <div class="card">
+    <p-table #dt [value]="users()" [rows]="10" [paginator]="true"
+      [globalFilterFields]="['appUsername', 'email', 'isActive']" [tableStyle]="{ 'min-width': '50rem' }"
+      [rowHover]="true" dataKey="userId"
+      currentPageReportTemplate="{{ 'common.showing' | translate }} {first} to {last} of {totalRecords} {{ 'users.title' | translate }}"
+      [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]">
+      <ng-template #caption>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+          <h5 class="m-0">{{ 'users.users' | translate }}</h5>
+          <p-iconfield iconPosition="left" class="ml-auto">
+            <p-inputicon>
+              <i class="pi pi-search"></i>
+            </p-inputicon>
+            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
+              placeholder="{{ 'common.search' | translate }}" />
+          </p-iconfield>
+        </div>
+      </ng-template>
+      <ng-template #header>
+        <tr>
+          <th pSortableColumn="appUsername" style="min-width:12rem">
+            {{ 'users.username' | translate }}
+            <p-sortIcon field="appUsername" />
+          </th>
+          <th pSortableColumn="email" style="min-width:12rem">
+            {{ 'users.email' | translate }}
+            <p-sortIcon field="email" />
+          </th>
+          <th pSortableColumn="isActive" style="min-width:12rem">
+            {{ 'users.is_active' | translate }}
+            <p-sortIcon field="isActive" />
+          </th>
+          <th style="min-width:8rem">
+            {{ 'common.actions' | translate }}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-user>
+        <tr>
+
+          <td style="min-width: 12rem">{{ user.appUsername }}</td>
+          <td style="min-width: 12rem">{{ user.email }}</td>
+          <td style="min-width: 4rem">
+            <p-tag [value]="(user.isActive === 'Y' ? 'common.active' : 'common.in_active') | translate "
+              [severity]="user.isActive === 'Y' ?'success':'danger'" />
+          </td>
+          <td>
+            <p-button icon="pi pi-crown" class="mr-2" [rounded]="true" [outlined]="true" (click)="viewUserRoles(user)"
+              pTooltip="{{'users.view_user_roles' | translate}}" />
+            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editUser(user)"
+              pTooltip="{{'users.edit_user'| translate}}" />
+            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteUser(user)"
+              pTooltip="{{'users.delete_user'| translate}}" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <p-dialog [(visible)]="showUserDialog" [style]="{ width: '450px' }" header="{{ 'users.user_details' | translate }}"
+    [modal]="true">
+    <ng-template #content>
+      <div class="flex flex-col gap-6">
+        <div>
+          <label for="username" class="block font-bold mb-3">{{ 'users.username' | translate }}</label>
+          <input type="text" pInputText id="username" [(ngModel)]="tempUser!.appUsername" fluid />
+        </div>
+        @if(!tempUser?.userId){
+        <div>
+          <label for="password" class="block font-bold mb-3">{{ 'users.password' | translate }}</label>
+          <p-password id="password" [(ngModel)]="tempUser!.appPassword" [toggleMask]="true" fluid />
+        </div>
+        }
+        <div>
+          <label for="email" class="block font-bold mb-3">{{ 'users.email' | translate }}</label>
+          <input type="email" pInputText id="email" [(ngModel)]="tempUser!.email" fluid />
+        </div>
+        <div class="flex items-center gap-3">
+          <label for="isActive" class="font-semibold">{{ 'users.is_active' | translate }}</label>
+          <p-toggleswitch [(ngModel)]="tempUser!.isActive" inputId="isActive" trueValue="Y" falseValue="N" />
+        </div>
+
+      </div>
+    </ng-template>
+
+    <ng-template #footer>
+      <p-button label="{{ 'common.cancel' | translate }}" icon="pi pi-times" text (click)="hideUserDialog()" />
+      <p-button label="{{ 'common.save' | translate }}" icon="pi pi-check" (click)="saveUser()" />
+    </ng-template>
+  </p-dialog>
+
+  <p-dialog [(visible)]="showUserRolesDialog" [style]="{ width: '600px' }" header="{{ 'users.user_roles' | translate }}"
+    [modal]="true">
+    <ng-template #content>
+      <p-table #dtr [value]="tempUserRoles()" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['roleName', 'description', 'isActive']" [tableStyle]="{ 'min-width': '40rem' }"
+        [rowHover]="true" dataKey="roleId"
+        currentPageReportTemplate="{{ 'common.showing' | translate }} {first} to {last} of {totalRecords} {{ 'users.roles' | translate }}"
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]">
+        <ng-template #caption>
+          <div class="flex justify-between items-center flex-column sm:flex-row">
+            <!-- <h5 class="m-0">{{ 'users.user_roles' | translate }}</h5> -->
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input pInputText type="text" (input)="onGlobalFilter(dtr, $event)"
+                placeholder="{{ 'common.search' | translate }}" />
+            </p-iconfield>
+          </div>
+        </ng-template>
+        <ng-template #header>
+          <tr>
+            <th pSortableColumn="roleName" style="min-width:12rem">
+              {{ 'users.role_name' | translate }}
+              <p-sortIcon field="roleName" />
+            </th>
+            <th pSortableColumn="description" style="min-width:12rem">
+              {{ 'users.description' | translate }}
+              <p-sortIcon field="description" />
+            </th>
+            <th pSortableColumn="isActive" style="min-width:12rem">
+              {{ 'users.is_active' | translate }}
+              <p-sortIcon field="isActive" />
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-role>
+          <tr>
+            <td style="min-width: 12rem">{{ role.roleName }}</td>
+            <td style="min-width: 12rem">{{ role.description }}</td>
+            <td style="min-width: 4rem">
+              <p-tag [value]="(role.isActive === 'Y' ? 'common.active' : 'common.in_active') | translate "
+                [severity]="role.isActive === 'Y' ?'success':'danger'" />
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="3" class="text-center">{{ 'users.this_user_has_no_roles_assigned' | translate }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-template>
+
+    <ng-template #footer>
+      <p-button label="{{ 'common.close' | translate }}" icon="pi pi-times" text (click)="hideUserRolesDialog()" />
+    </ng-template>
+  </p-dialog>
+  <p-confirmdialog [style]="{ width: '450px' }" />
+</div>
+}

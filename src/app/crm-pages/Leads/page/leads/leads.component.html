@@ -1,0 +1,634 @@
+<div class="leads-layout" [class.collapsed]="collapsed">
+    <!-- ====== LEFT: your existing page ====== -->
+    <section class="left-list">
+        <!-- كل كودك الحالي كما هو 👇 -->
+        <p-toast></p-toast>
+        <p-confirmdialog [style]="{ width: '420px' }"></p-confirmdialog>
+
+        <p-toolbar styleClass="mb-2">
+            <!-- ====== SEARCH FILTERS ROW ====== -->
+            <div class="filters-panel p-3 flex flex-wrap gap-3 items-end  ">
+                <label class="text-sm font-medium mb-2">Lead title:</label>
+                <div class="flex flex-column">
+
+                    <input pInputText [(ngModel)]="filter.leadTitle" (keyup.enter)="fetch()"
+                        placeholder="Search By lead Title" style="min-width: 14rem" />
+                </div>
+
+
+                <label class="text-sm font-medium mb-2">Person:</label>
+                <div class="flex flex-column">
+                    <!-- <label class="text-sm font-medium mb-1">Person</label> -->
+                    <input pInputText [(ngModel)]="filter.personName" (keyup.enter)="fetch()"
+                        placeholder="Search By Person" style="min-width: 14rem" />
+                </div>
+
+                <label class="text-sm font-medium mb-2">Organization:</label>
+                <div class="flex flex-column">
+                    <!-- <label class="text-sm font-medium mb-1">Organization</label> -->
+                    <input pInputText [(ngModel)]="filter.orgName" (keyup.enter)="fetch()"
+                        placeholder="Search By Organization" style="min-width: 14rem" />
+                </div>
+
+                <div class="flex gap-2 ml-auto flex-shrink-0 mb-1 ">
+                    <button pButton label="Search" icon="pi pi-filter" (click)="fetch()"
+                        class="p-button-sm p-button-primary"></button>
+
+                    <button pButton label="Reset" icon="pi pi-times" (click)="clearFilters()"
+                        class="p-button-sm p-button-secondary p-button-outlined"></button>
+                </div>
+            </div>
+            <!-- ====== /SEARCH FILTERS ROW ====== -->
+        </p-toolbar>
+        <p-toolbar styleClass="mb-2">
+
+
+            <ng-template pTemplate="start">
+                <button pButton class="mr-3" label="New lead" icon="pi pi-plus" (click)="openLeadDialog()"></button>
+
+                <button pButton type="button" class="mr-2" icon="pi pi-download" label="Export CSV"
+                    (click)="exportCSV()"></button>
+
+                <button pButton label="Archive selected" class="p-button-danger mr-2" icon="pi pi-trash"
+                    [disabled]="selected.length === 0" (click)="confirmDeleteSelected()">
+                </button>
+
+                <div class="ml-3 flex items-center gap-2">
+                    <span>Filter:</span>
+                    <select class="p-inputtext p-component" [(ngModel)]="selectedView" (change)="fetch()">
+                        <option value="A">All</option>
+                        <option value="O">Overdue</option>
+                        <option value="P">Planned</option>
+                        <option value="NON">No Activity</option>
+                        <option value="ARC">Archievd</option>
+                    </select>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="end">
+                <!-- <p-iconField>
+                    <p-inputIcon styleClass="pi pi-search"></p-inputIcon>
+                    <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Search" />
+                </p-iconField> -->
+            </ng-template>
+        </p-toolbar>
+
+        <div *ngIf="!loading">
+            <p-table #dt [value]="rows" [(selection)]="selected" dataKey="leadId" [metaKeySelection]="false"
+                [paginator]="true" [rows]="10" [rowHover]="true" [rowsPerPageOptions]="[10,20,30]"
+                [showCurrentPageReport]="true" [columns]="exportColumns" [exportFilename]="exportFileName"
+                [currentPageReportTemplate]="'Showing {first} to {last} of {totalRecords} leads'"
+                [globalFilterFields]="['leadTitle','organizationName','personName','createdBy','leadDesc']"
+                [tableStyle]="{ 'min-width': '72rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="leadTitle" style="min-width:18rem">Lead <p-sortIcon
+                                field="leadTitle"></p-sortIcon></th>
+                        <th pSortableColumn="organizationName" style="min-width:16rem">Organization <p-sortIcon
+                                field="organizationName"></p-sortIcon></th>
+                        <th pSortableColumn="personName" style="min-width:16rem">Person <p-sortIcon
+                                field="personName"></p-sortIcon></th>
+                        <th pSortableColumn="createdBy" style="min-width:12rem">Owner <p-sortIcon
+                                field="createdBy"></p-sortIcon></th>
+                        <th style="min-width:8rem">Actions</th>
+                        <th style="width:3rem; text-align:center">Select</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-p>
+                    <tr (click)="openPreview(p)" [class.active-row]="preview?.leadId === p.leadId">
+                        <td> {{ p.leadTitle }}</td>
+                        <td>{{ p.organizationName || '' }}</td>
+                        <td>{{ p.personName || '' }}</td>
+                        <td>{{ p.createdBy || '' }}</td>
+
+                        <td class="flex gap-2">
+                            <button pButton icon="pi pi-pencil" (click)="$event.stopPropagation(); openEdit(p)"
+                                class="p-button-rounded p-button-outlined mr-2"></button>
+                        </td>
+
+                        <td style="text-align:center">
+                            <p-tableCheckbox [value]="p" (click)="$event.stopPropagation()"
+                                (keydown.enter)="$event.stopPropagation()" (keydown.space)="$event.stopPropagation()">
+                                {{ p.leadTitle }}</p-tableCheckbox>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+
+    </section>
+
+    <!-- ====== MIDDLE: the arrow button ====== -->
+    <button type="button" class="splitter-toggle" (click)="toggleDetails()" [attr.aria-expanded]="!collapsed"
+        aria-label="Toggle details">
+        <!-- <i class="pi ml-0 mr-0" [ngClass]="collapsed ? 'pi-chevron-left' : 'pi-chevron-right'"></i>
+             <i class="pi ml-0 mr-0 " [ngClass]="collapsed ? 'pi-chevron-left' : 'pi-chevron-right'"></i> -->
+
+        <!-- <i class="pi toggle-icon-lg" [ngClass]="collapsed ? 'pi-angle-double-left' : 'pi-angle-double-right'">
+        </i> -->
+        <i class="pi" [ngClass]="collapsed ? 'pi-angle-double-left' : 'pi-angle-double-right'"></i>
+
+        <!-- <img
+    src="assets/icons/panel-toggle.svg"  
+    alt="toggle"
+    class="toggle-icon"
+    [class.flip]="collapsed"
+  /> -->
+    </button>
+
+    <!-- ====== RIGHT: details panel ====== -->
+    <section class="right-details" *ngIf="!collapsed">
+        <ng-container *ngIf="preview; else emptyState">
+            <div class="details-header">
+                <div class="title-block">
+
+                    <!-- العنوان: سطر واحد + ellipsis + tooltip -->
+                    <h2 class="lead-title" class="center" [pTooltip]="preview.leadTitle" tooltipPosition="top">
+                        <!-- <i class="pi pi-arrow-right title-icon-min"></i> -->
+                        <i class="pi pi-briefcase title-icon-min"> ::</i>
+                        <!-- <i class="pi pi-user title-icon-min"></i> -->
+                        <!-- <i class="pi pi-tag title-icon-min"></i> -->
+                        {{ preview.leadTitle }}
+                    </h2>
+
+                    <!-- ميتاداتا: Organization + Person كـ chips -->
+                    <div class="meta-row">
+                        <span class="meta-chip" *ngIf="preview.personName" [pTooltip]="preview.personName"
+                            tooltipPosition="top">
+                            <i class="pi pi-user"> ::</i>
+                            <span class="text">{{ preview.personName }}</span>
+                        </span>
+                    </div>
+                    <div class="meta-row">
+                        <!-- <span class="meta-chip" *ngIf="preview.personName" [pTooltip]="preview."
+                            tooltipPosition="top">
+                            <i class="pi pi-user"></i>
+                            <span class="text">{{ preview.personName }}</span>
+                        </span> -->
+                    </div>
+                    <div class="meta-row">
+                        <span class="meta-chip" *ngIf="preview.organizationName" [pTooltip]="preview.organizationName"
+                            tooltipPosition="top">
+                            <i class="pi pi-building"> ::</i>
+                            <span class="text">{{ preview.organizationName }}</span>
+                        </span>
+                        <!-- <span class="dot" *ngIf="preview.organizationName && preview.personName">·</span> -->
+                    </div>
+
+                </div>
+
+                <!-- قيمة الصفقة/الـValue لو رقم -->
+                <div class="value-chip amount mt-3" *ngIf="isAmount(preview?.leadSource); else valueAsTag">
+                    <i class="pi pi-wallet"></i>
+                    <span>{{ preview.leadSource | number:'1.0-0' }}</span>
+                    <small class="cur">EGP</small>
+                </div>
+
+                <!-- لو leadSource مش رقم (مثلاً 'Manual') نعرضها كـ Tag -->
+                <ng-template #valueAsTag>
+                    <div class="value-chip tag" *ngIf="preview?.leadSource">
+                        <i class="pi pi-tag"></i>
+                        <span>{{ preview.leadSource }}</span>
+                    </div>
+                </ng-template>
+            </div>
+
+            <hr>
+
+            <div class="details-body">
+                <!-- <h4 class="mb-2 text-center">Notes & Activities</h4> -->
+                <mat-tab-group class="mt-4 notes-tabs" animationDuration="10ms">
+                    <mat-tab label="Notes">
+                        <!-- <ng-template mat-tab-label>
+                            <i class="pi pi-file tab-icon"></i>
+                            <span>Notes</span>
+                        </ng-template> -->
+                        <div style="padding: 12px 8px;">
+                            <div class="add-note-card">
+                                <textarea class="note-input" rows="3" placeholder="Write your note"
+                                    [(ngModel)]="newNoteText" pTextarea></textarea>
+                                <button pButton class="add-note-btn" (click)="addNote()" label="Add note">
+                                    <!-- (click)="addNote()" -->
+                                </button>
+                            </div>
+                        </div>
+                        <div class="notes-list">
+                            <div class="note-card" *ngFor="let n of notes">
+                                <div class="note-card-header">
+                                    <div class="left-side">
+                                        <i class="pi pi-file note-icon"></i>
+                                        <div class="note-title">Note</div>
+                                    </div>
+
+                                    <div class="right-side">
+                                        <div class="note-date">{{ n.createdOn }}</div>
+                                        <div class="note-time">{{ n.createdOn }}</div>
+                                        <div class="note-by">By : {{ n.createdBy }}</div>
+                                    </div>
+                                </div>
+
+                                <div class="note-body">
+                                    {{ n.noteDesc }}
+                                    <!-- <button pButton icon="pi pi-pencil"
+                                        class="edit-btn p-button-text p-button-plain p-button-sm"
+                                        style="margin-left: .5rem;">
+                                    </button> -->
+                                    <!-- <button pButton icon="pi pi-pencil"
+                                        class="p-button-text p-button-plain p-button-sm ml-2"
+                                        (click)="startEditNote(i)">
+                                    </button> -->
+                                    <!-- (click)="editNote(n)" -->
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </mat-tab>
+                    <mat-tab label="Activities">
+                        <div style="padding: 12px 8px;">
+                            <div class="add-note-card">
+                                <textarea class="note-input" rows="3" placeholder="Write your activity"
+                                    [(ngModel)]="newNoteText" pTextarea></textarea>
+                                <button pButton class="add-note-btn" (click)="openNewActivity()" label="Add activities">
+                                    <!-- (click)="addNote()" -->
+                                </button>
+                            </div>
+                            <div class="activities-list">
+                                <div class="activity-card" *ngFor="let a of activities">
+                                    <!-- top row: type + datetime -->
+                                    <div class="activity-head">
+                                        <div class="activity-type">
+                                            <i class="pi pi-phone activity-type-icon"></i>
+                                            <span class="activity-type-text">{{ a.activityTypeName }}</span>
+                                        </div>
+
+                                        <div class="activity-datetime">
+                                            <div class="activity-date">{{ a.createdOn }}</div>
+                                            <!-- <div class="activity-time">{{ a.createdOn }}</div> -->
+                                        </div>
+                                    </div>
+
+                                    <!-- description row -->
+                                    <div class="activity-desc-row">
+                                        <span class="activity-desc">{{ a.subject }}</span>
+                                        <!-- <i class="pi pi-image activity-attach-icon"></i> -->
+                                    </div>
+
+                                    <!-- owner row -->
+                                    <div class="activity-owner-row">
+                                        <i class="pi pi-users activity-owner-icon"></i>
+                                        <span class="activity-owner-text">{{ a.userName }}</span>
+                                    </div>
+
+                                    <!-- due row -->
+                                    <div class="activity-due-row">
+                                        <i class="pi pi-calendar activity-due-icon"></i>
+                                        <span class="activity-due-text">{{ a.dueDate }}</span>
+                                    </div>
+
+                                    <!-- status row bottom right -->
+                                    <!-- <div class="activity-status-row">
+                                        <span class="activity-status">status: {{ a.status }}</span>
+                                    </div> -->
+                                    <div class="activity-status-row">
+                                        <span class="activity-status">
+                                            status:
+                                            {{ a.status === 'I' ? 'in Progress' : (a.status === 'D' ? 'Done' : a.status)
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-tab>
+
+                </mat-tab-group>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <!-- مكان عرض النوتس والنشاطات كما تحب -->
+                <!-- Placeholder سريع لحد ما توصّل APIs -->
+                <!-- <div class="pill-row">
+                    <span class="pill">Planned</span>
+                    <span class="pill alt">Past</span>
+                </div> -->
+
+                <!-- <div class="empty muted" *ngIf="!hasNotes && !hasActivities">
+                    No notes or activities yet.
+                </div> -->
+
+                <!-- حط هنا components أو lists بتاعتك -->
+                <!-- مثال:
+        <app-lead-notes [leadId]="preview.leadId"></app-lead-notes>
+        <app-lead-activities [leadId]="preview.leadId"></app-lead-activities>
+        -->
+
+            </div>
+        </ng-container>
+
+        <ng-template #emptyState>
+            <div class="empty">
+                <i class="pi pi-arrow-left text-2xl"></i>
+                <p class="mt-2">Select a lead to see details</p>
+            </div>
+        </ng-template>
+    </section>
+</div>
+
+<!-- ===== Dialog ===== -->
+<p-dialog [(visible)]="leadDialog" [header]="isEdit ? 'Edit Lead' : 'Lead'" [modal]="true" [closable]="false"
+    [dismissableMask]="true" [appendTo]="'body'" [style]="{ width: '920px', maxWidth: '96vw' }" styleClass="sg-dialog">
+
+    <ng-template pTemplate="content">
+        <!-- Spinner (keeps DOM alive) -->
+        <div class="p-6 flex items-center justify-center gap-3" *ngIf="dialogLoading">
+            <p-progressSpinner strokeWidth="3"></p-progressSpinner>
+        </div>
+
+        <!-- Keep form DOM; only hide while loading -->
+        <div [hidden]="dialogLoading">
+            <div class="sg-form">
+                <!-- Lead info -->
+                <div class="section">
+                    <h3>Lead info</h3>
+
+                    <div class="sg-row">
+                        <div class="sg-field">
+                            <label class="sg-label">* Lead name:</label><br />
+                            <input pInputText class="w-full" [(ngModel)]="leadForm.leadTitle" name="leadTitle"
+                                required />
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="sg-row sg-grid-3">
+                        <div class="sg-field">
+                            <label class="sg-label">Target date:</label><br />
+                            <p-datePicker [(ngModel)]="leadForm.targetDate" styleClass="w-full"
+                                [showIcon]="true"></p-datePicker>
+                        </div>
+                        <div class="sg-field">
+                            <label class="sg-label">Value:</label><br />
+                            <input type="number" pInputText [(ngModel)]="leadForm.leadSource" required fluid />
+                        </div>
+                    </div>
+
+                    <div class="sg-row">
+                        <div class="sg-field w-full">
+                            <label class="sg-label">Owner / Assign to:</label><br />
+                            <p-autoComplete class="w-full" [(ngModel)]="assigneeSelectedAutoValue"
+                                [suggestions]="assigneeAutoFiltered" (completeMethod)="filterAssigneeList($event)"
+                                (onSelect)="onAssigneeSelect($event.value)" (onClear)="onAssigneeClear()"
+                                (onFocus)="openAssigneeSuggestions()" (onDropdownClick)="openAssigneeSuggestions()"
+                                [dropdown]="true" [forceSelection]="true" [minLength]="0" [appendTo]="'body'"
+                                loading="assigneeLoading || dialogLoading" field="name" optionLabel="name"
+                                placeholder="Search users"></p-autoComplete>
+                        </div>
+                    </div>
+                    <br />
+
+
+                    <!-- <br /> -->
+
+                    <div class="sg-row">
+                        <div class="sg-field">
+                            <label class="sg-label">Description:</label><br />
+                            <textarea pTextarea class="w-full" rows="4" [(ngModel)]="leadForm.leadDesc"
+                                name="leadDesc"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+
+                <!-- Client info -->
+                <div class="section">
+                    <h3>Client info</h3>
+
+                    <div class="sg-row">
+                        <div class="sg-field flex items-center gap-4 flex-wrap">
+                            <div class="flex items-center gap-2">
+                                <p-radioButton [name]="'ct-' + (editingId ?? 'new')" [value]="'S'"
+                                    [(ngModel)]="leadForm.clientType" [ngModelOptions]="{ standalone: true }"
+                                    inputId="ct-S"></p-radioButton>
+                                <label for="ct-S" class="sg-label m-0">Saved person</label>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <p-radioButton [name]="'ct-' + (editingId ?? 'new')" [value]="'O'"
+                                    [(ngModel)]="leadForm.clientType" [ngModelOptions]="{ standalone: true }"
+                                    inputId="ct-O"></p-radioButton>
+                                <label for="ct-O" class="sg-label m-0">New organization</label>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <p-radioButton [name]="'ct-' + (editingId ?? 'new')" [value]="'P'"
+                                    [(ngModel)]="leadForm.clientType" [ngModelOptions]="{ standalone: true }"
+                                    inputId="ct-P"></p-radioButton>
+                                <label for="ct-P" class="sg-label m-0">New person</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+
+                    <!-- Saved person -->
+
+
+                    <label class="sg-label">Organization:</label><br />
+                    <!-- <p-autoComplete class="w-full" [(ngModel)]="orgSelectedAutoValue" [suggestions]="orgAutoFiltered"
+                        (completeMethod)="filterOrgList($event)" (onSelect)="onOrgSelect($event.value)"
+                        (onClear)="onOrgClear()" (onFocus)="openOrgSuggestions()"
+                        (onDropdownClick)="openOrgSuggestions()" [dropdown]="true" [forceSelection]="true"
+                        [minLength]="0" [appendTo]="'body'" field="name" optionLabel="name"
+                        placeholder="Search organization" loading="dialogLoading">
+                    </p-autoComplete> -->
+                    <p-autoComplete class="w-full" [(ngModel)]="orgSelectedAutoValue" [suggestions]="orgAutoFiltered"
+                        (completeMethod)="filterOrgList($event)" (onSelect)="onOrgSelect($event.value)"
+                        (onClear)="onOrgClear()" (onFocus)="openOrgSuggestions()"
+                        (onDropdownClick)="openOrgSuggestions()" [dropdown]="true" [forceSelection]="true"
+                        [minLength]="0" [appendTo]="'body'" field="name" optionLabel="name"
+                        placeholder="Search organization" loading="dialogLoading" />
+
+
+                    <ng-container *ngIf="leadForm.clientType === 'S'">
+                        <label class="sg-label">Persons:</label><br />
+                        <p-autoComplete [(ngModel)]="personSelectedAutoValue" [suggestions]="personAutoFiltered"
+                            (completeMethod)="filterPersonList($event)" (onSelect)="onPersonSelect($event.value)"
+                            (onClear)="onPersonClear()" (onFocus)="openPersonSuggestions()"
+                            (onDropdownClick)="openPersonSuggestions()" [dropdown]="true" [forceSelection]="true"
+                            [minLength]="0" loading="personLoading || dialogLoading" field="name" optionLabel="name"
+                            [appendTo]="'body'" placeholder="Search people" class="w-full">
+                        </p-autoComplete>
+                    </ng-container>
+
+                    <!-- New organization -->
+                    <ng-container *ngIf="leadForm.clientType === 'O'">
+                        <div class="sg-row">
+                            <div class="sg-field">
+                                <label class="sg-label">* Organization name:</label><br />
+                                <input pInputText class="w-full" [(ngModel)]="leadForm.newOrganization" required />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="sg-row">
+                            <div class="sg-field">
+                                <label class="sg-label">Address:</label><br />
+                                <input pInputText class="w-full" [(ngModel)]="leadForm.newOrganizaionAddress" />
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <!-- New person -->
+                    <ng-container *ngIf="leadForm.clientType === 'P'">
+                        <div class="sg-row sg-grid-2">
+                            <div class="sg-field">
+                                <label class="sg-label">* first name:</label><br />
+                                <input pInputText class="w-full" [(ngModel)]="leadForm.newPersonFirstName" required />
+                            </div>
+
+                            <div class="sg-field">
+                                <label class="sg-label">last name:</label><br />
+                                <input pInputText class="w-full" [(ngModel)]="leadForm.newPersonLastName" />
+                            </div>
+                        </div>
+
+                        <div class="sg-row sg-grid-2">
+                            <!-- <div class="sg-field">
+                                <label class="sg-label">* Person name:</label><br />
+                                <input pInputText class="w-full" [(ngModel)]="leadForm.newPersonFirstName" required />
+                            </div>
+                             -->
+                            <div class="sg-field">
+                                <label class="sg-label">Title:</label><br />
+                                <input pInputText class="w-full" [(ngModel)]="leadForm.newPersonTitle" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="sg-row sg-grid-2">
+                            <div class="sg-field">
+                                <label class="sg-label">Mobile:</label><br />
+                                <input pInputText class="w-full" [(ngModel)]="leadForm.newPersonMobile" />
+                            </div>
+                            <div class="sg-field">
+                                <label class="sg-label">Email:</label><br />
+                                <input pInputText class="w-full" [(ngModel)]="leadForm.newPersonEmail" />
+                            </div>
+                        </div>
+
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <div class="sg-footer">
+            <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-text"
+                (onClick)="leadDialog=false; editingId=null;"></p-button>
+            <p-button label="Save" icon="pi pi-check" [disabled]="dialogLoading" (onClick)="save()"></p-button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+
+<p-dialog [(visible)]="activityDialog" [style]="{ width: '600px' }"
+    [header]="activity ? (activity.activityId ? ('activities.edit_activity' | translate) : ('activities.new_activity' | translate)) : ''"
+    [modal]="true">
+    <ng-template #content>
+        <div class="flex flex-col gap-5">
+            <div class="flex flex-row gap-2">
+                <p-button icon="pi pi-phone" [text]="activity.activityTypeId !== 1"
+                    pTooltip="{{'activities.call' | translate}}"
+                    [severity]="activity.activityTypeId === 1 ? 'primary' : 'secondary'"
+                    (click)="onChangeActivityType(1)" />
+                <p-button icon="pi pi-users" [text]="activity.activityTypeId !== 2"
+                    pTooltip="{{'activities.meeting' | translate}}"
+                    [severity]="activity.activityTypeId === 2 ? 'primary' : 'secondary'"
+                    (click)="onChangeActivityType(2)" />
+                <p-button icon="pi pi-check-square" [text]="activity.activityTypeId !== 3"
+                    pTooltip="{{'activities.task' | translate}}"
+                    [severity]="activity.activityTypeId === 3 ? 'primary' : 'secondary'"
+                    (click)="onChangeActivityType(3)" />
+            </div>
+            <div class="flex flex-row gap-6">
+                <div class="flex flex-col w-1/2">
+                    <label for="subject" class="block font-bold mb-3">{{ 'activities.subject' | translate
+                        }} *</label>
+                    <input type="text" pInputText id="subject" [(ngModel)]="activity.subject" autofocus fluid />
+                </div>
+                <div class="flex flex-col w-1/2">
+                    <label class="block font-bold mb-3">{{ 'activities.due_date' | translate }} *</label>
+                    <p-datepicker [showIcon]="true" [showButtonBar]="true" [(ngModel)]="activity.dueDate" />
+                </div>
+            </div>
+            <div class="flex flex-row gap-6">
+                <div class="flex flex-col w-1/2">
+                    <!-- <label class="block font-bold mb-3">{{ 'activities.assigned_to' | translate }} *</label> -->
+                    <!-- <p-autocomplete [(ngModel)]="activity.assignee" [suggestions]="usersAutoFilteredValue"
+                            optionLabel="name" placeholder="{{ 'common.search' | translate }}" dropdown display="chip"
+                            (completeMethod)="filterUsers($event)" appendTo="body" /> -->
+                </div>
+            </div>
+            <div class="flex flex-row gap-6">
+                <div class="flex flex-col w-1/2">
+                    <!-- <label class="block font-bold mb-3">{{ 'activities.person' | translate }}</label> -->
+                    <!-- <p-autocomplete [(ngModel)]="selectedPerson" [suggestions]="personsAutoFilteredValue"
+                            optionLabel="name" placeholder="{{ 'common.search' | translate }}" dropdown
+                            (completeMethod)="filterPersons($event)" (onSelect)="onObjectSelect($event.value, 'P')"
+                            (onClear)="onObjectClear()" [disabled]="!!selectedDeal || !!selectedOrganization"
+                            appendTo="body" /> -->
+                </div>
+                <div class="flex flex-col w-1/2">
+                    <!-- <label class="block font-bold mb-3">{{ 'activities.deal' | translate }}</label> -->
+                    <!-- <p-autocomplete [(ngModel)]="selectedDeal" [suggestions]="dealsAutoFilteredValue"
+                            optionLabel="name" placeholder="{{ 'common.search' | translate }}" dropdown
+                            (completeMethod)="filterDeals($event)" (onSelect)="onObjectSelect($event.value, 'D')"
+                            (onClear)="onObjectClear()" [disabled]="!!selectedPerson || !!selectedOrganization"
+                            appendTo="body" /> -->
+                </div>
+                <div class="flex flex-col w-1/2">
+                    <!-- <label class="block font-bold mb-3">{{ 'activities.organization' | translate }}</label> -->
+                    <!-- <p-autocomplete [(ngModel)]="selectedOrganization"
+                            [suggestions]="organizationsAutoFilteredValue" optionLabel="name"
+                            placeholder="{{ 'common.search' | translate }}" dropdown
+                            (completeMethod)="filterOrganizations($event)"
+                            (onSelect)="onObjectSelect($event.value, 'O')" (onClear)="onObjectClear()"
+                            [disabled]="!!selectedPerson || !!selectedDeal" appendTo="body" /> -->
+                </div>
+            </div>
+            <div>
+                <label for="notes" class="block font-bold mb-3">{{ 'activities.notes' | translate }}</label>
+                <textarea id="notes" pTextarea [(ngModel)]="activity.notes" rows="3" cols="20" fluid></textarea>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #footer>
+        <!-- <label for="checkbox" class="block font-bold mt-2">{{ 'activities.mark_as_done' | translate }}</label>
+        <p-checkbox name="checkbox" [(ngModel)]="activity.status" [binary]="true" [trueValue]="'D'" [falseValue]="'I'"
+            class="mt-2" /> -->
+        <label for="checkbox" class="block font-bold mt-2">Status:</label>
+        <p-checkbox name="checkbox" [(ngModel)]="activity.status" [binary]="true" [trueValue]="'D'" [falseValue]="'I'"
+            class="mt-2" />
+        <p-button label="{{ 'common.cancel' | translate }}" icon="pi pi-times" text (click)="hideDialog()" />
+        <p-button label="{{ 'common.save' | translate }}" icon="pi pi-save" (click)="saveActivity()" />
+    </ng-template>
+</p-dialog>

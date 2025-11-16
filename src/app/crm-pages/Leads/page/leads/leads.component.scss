@@ -1,0 +1,605 @@
+.leads-layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 18px 480px; // left | gutter | right
+  gap: 0;
+  min-height: calc(100vh - 190px); // عدّلها حسب الهيدر/الفوتر عندك
+  transition: grid-template-columns .25s ease;
+}
+
+.leads-layout.collapsed {
+  grid-template-columns: 1fr 18px 0;
+}
+
+.left-list {
+  overflow: auto;
+}
+
+.splitter-toggle {
+  border: 0;
+  cursor: pointer;
+  background: var(--surface-100);
+  border-left: 1px solid var(--surface-300);
+  border-right: 1px solid var(--surface-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  outline: none;
+}
+
+.splitter-toggle:hover {
+  background: var(--surface-200);
+}
+
+.splitter-toggle:focus {
+  box-shadow: 0 0 0 2px var(--primary-200);
+}
+
+.splitter-toggle .pi {
+  font-size: 2.1rem;
+}
+
+.right-details {
+  overflow: auto;
+  border-left: 1px solid var(--surface-300);
+  background: var(--surface-card, var(--surface-0));
+  padding: 1rem 1rem 2rem;
+}
+
+.details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: .75rem;
+
+  .muted {
+    color: var(--text-color-secondary);
+    font-size: .875rem;
+  }
+
+  .value {
+    font-weight: 600;
+  }
+}
+
+.details-body .pill-row {
+  display: flex;
+  gap: .5rem;
+  margin: .5rem 0 1rem;
+}
+
+.pill {
+  display: inline-block;
+  font-size: .75rem;
+  padding: .25rem .5rem;
+  border-radius: 999px;
+  background: var(--surface-200);
+  color: var(--text-color);
+}
+
+.pill.alt {
+  background: var(--surface-300);
+}
+
+.empty {
+  height: calc(100% - 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color-secondary);
+}
+
+tr.active-row {
+  outline: 2px solid var(--primary-200);
+  outline-offset: -2px;
+}
+
+/* 1) Add horizontal gap between the three grid columns */
+.leads-layout {
+  /* was: gap: 0; */
+  column-gap: 7px;
+  /* space LEFT of the icon + space RIGHT of the icon */
+  row-gap: 0;
+  grid-template-columns: 1fr 18px 480px;
+  /* table | icon | details */
+  transition: grid-template-columns .25s ease;
+}
+
+/* when collapsed keep the same gap, just hide the right panel */
+.leads-layout.collapsed {
+  grid-template-columns: 1fr 18px 0;
+}
+
+/* 2) (optional) give the whole layout a little outer padding */
+.leads-layout {
+  padding-inline: 8px;
+}
+
+/* space from page edges */
+
+/* 3) (optional) make the icon track a touch wider, for extra air */
+.splitter-toggle {
+  width: 18px;
+}
+
+/* or 22–28px if you like */
+.p-splitter {
+  column-gap: 12px;
+  /* space between left panel | gutter | right panel */
+}
+
+.details-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: .75rem;
+}
+
+.title-block {
+  min-width: 0;
+}
+
+/* للسماح بالـ ellipsis */
+
+.lead-title {
+  margin: 0 0 .25rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 46ch;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-color-secondary);
+}
+
+.meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 30ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: .15rem .5rem;
+  border-radius: 999px;
+  background: var(--surface-200);
+}
+
+.meta-chip i {
+  font-size: .9rem;
+  opacity: .85;
+}
+
+.dot {
+  opacity: .45;
+}
+
+.value-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .25rem .6rem;
+  border-radius: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  height: fit-content;
+}
+
+.value-chip.amount {
+  background: color-mix(in srgb, var(--primary-color) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary-color) 28%, transparent);
+}
+
+.value-chip.tag {
+  background: var(--surface-200);
+  border: 1px solid var(--surface-300);
+  font-weight: 600;
+}
+
+.value-chip .cur {
+  font-size: .75rem;
+  opacity: .8;
+}
+
+
+
+
+
+// ddddddddddddd
+
+
+.tabs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: .75rem 0 .5rem;
+}
+
+.tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  width: 320px;
+  border-bottom: 1px solid var(--surface-300);
+}
+
+.tab {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--text-color);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.tab.active {
+  color: var(--primary-color);
+}
+
+.indicator {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  width: 50%;
+  background: var(--primary-color);
+  transition: transform .25s ease;
+}
+
+.arrows {
+  display: flex;
+  gap: .25rem;
+}
+
+/* optional spacing under the slider */
+.p-carousel .p-carousel-content {
+  padding-block: .25rem .75rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* === Right-side Notes/Activities panel === */
+
+.notes-tabs {
+
+  // optional: make the tab labels match your dark header
+  .mdc-tab__text-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+
+  }
+
+}
+
+.notes-panel {
+  background: #fff;
+  border-radius: 4px;
+  border: 1px solid #dcdcdc;
+  padding: 1rem;
+  max-width: 500px;
+  margin-top: 1rem;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 8%);
+  color: #1a1a1a;
+  font-size: 0.9rem;
+}
+
+/* top textarea + button card */
+.add-note-card {
+  // border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  padding: 1rem;
+  // background: #fff;
+  margin-bottom: 1rem;
+
+}
+
+.note-input {
+  width: 100%;
+  min-height: 70px;
+  border: 1px solid #cfcfcf;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  padding: 0.5rem 0.6rem;
+  outline: none;
+  resize: vertical;
+  // color: #1a1a1a;
+
+  // &:focus {
+  //   // border-color: #4b9a4f;
+  //   // box-shadow: 0 0 0 2px rgb(75 154 79 / 20%);
+  // }
+}
+
+.add-note-btn {
+  display: block;
+  margin: 0.75rem auto 0;
+  background-color: #4b9a4f !important;
+  border-color: #4b9a4f !important;
+  color: #fff !important;
+  width: 140px;
+  text-align: center;
+  font-weight: 600;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section chips: PLANNED / PAST */
+.section-block {
+  margin-top: 1.5rem;
+}
+
+.section-chip {
+  display: inline-block;
+  background: #e7e2c9;
+  /* beige-ish like screenshot */
+  color: #4a4a3a;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgb(0 0 0 / 15%);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+
+  &.alt {
+    background: #efefef;
+    color: #4a4a4a;
+  }
+}
+
+.notes-list {
+  border-left: 2px dashed #c4c4c4;
+  padding-left: 0.75rem;
+}
+
+/* Individual note card */
+.note-card {
+  background: #fdfdfd;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%);
+  position: relative;
+}
+
+.note-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.left-side {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.note-icon {
+  font-size: 1.2rem;
+  color: #444;
+}
+
+.note-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.right-side {
+  text-align: right;
+  font-size: 0.8rem;
+  line-height: 1.2rem;
+  color: #444;
+  min-width: 130px;
+
+  .note-date,
+  .note-time,
+  .note-by {
+    white-space: nowrap;
+  }
+}
+
+.note-body {
+  font-size: 0.85rem;
+  color: #333;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  word-break: break-word;
+}
+
+.note-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.edit-btn .pi {
+  font-size: 0.9rem;
+}
+
+/* empty state */
+.empty-notes {
+  text-align: center;
+  color: #777;
+  font-size: 0.8rem;
+  padding: 2rem 0;
+  border: 2px dashed #dcdcdc;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+// .leads-layout {
+//   display: grid;
+//   grid-template-columns: minmax(0, 1fr) 18px 480px; /* <-- minmax(0,1fr) is important */
+//   column-gap: 7px;
+//   padding-inline: 8px;
+//   min-height: calc(100vh - 190px);
+//   transition: grid-template-columns .25s ease;
+// }
+
+// .leads-layout.collapsed {
+//   grid-template-columns: minmax(0, 1fr) 18px 0;
+// }
+
+// .left-list {
+//   overflow: auto;
+//   min-width: 0; /* <-- CRITICAL: let it shrink in the grid without forcing overflow */
+// }
+
+.right-details {
+  border-left: 1px solid var(--surface-300);
+  background: var(--surface-card, var(--surface-0));
+  padding: 1rem 1rem 2rem;
+
+  /* 👇 make it scroll */
+  max-height: calc(91.5vh - 0px); /* adjust if you have a header */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ===== Activities list styling ===== */
+
+.activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-left: 0.75rem;
+  border-left: 2px dashed #c4c4c4; /* same dashed spine like notes */
+}
+
+/* blue card */
+.activity-card {
+  background: #1f5fa6; /* adjust this if you want lighter/darker blue */
+  color: #fff;
+  border-radius: 10px;
+  padding: 0.75rem 1rem 1rem;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  max-width: 480px; /* keeps card width similar to screenshot */
+  border: 1px solid rgb(0 0 0 / 20%);
+}
+
+/* header row: Call ... date/time */
+.activity-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: .5rem;
+}
+
+.activity-type {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.activity-type-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.activity-datetime {
+  text-align: right;
+  font-size: .85rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #fff;
+}
+
+.activity-date,
+.activity-time {
+  white-space: nowrap;
+}
+
+/* description row ("follow up" + img icon) */
+.activity-desc-row {
+  display: flex;
+  align-items: flex-start;
+  gap: .5rem;
+  margin-bottom: .5rem;
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 400;
+  word-break: break-word;
+}
+
+.activity-attach-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* owner row (user icon + name) */
+.activity-owner-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .5rem;
+  font-size: .9rem;
+  font-weight: 400;
+  color: #fff;
+}
+
+.activity-owner-icon {
+  font-size: 1rem;
+}
+
+/* due date row (calendar + date) */
+.activity-due-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: .75rem;
+  font-size: .9rem;
+  font-weight: 400;
+  color: #fff;
+}
+
+.activity-due-icon {
+  font-size: 1rem;
+}
+
+/* status row bottom ("Done  __") */
+.activity-status-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: .5rem;
+  font-size: .9rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.activity-status-line {
+  font-weight: 400;
+  opacity: .8;
+}

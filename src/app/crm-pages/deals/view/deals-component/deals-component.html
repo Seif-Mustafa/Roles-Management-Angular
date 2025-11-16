@@ -1,0 +1,317 @@
+<p-toast />
+<app-loading-spinner [loading]="loading()" />
+<div *ngIf="!loading()">
+    <div class="flex mb-4">
+        <div class="card flex flex-col gap-4 w-full">
+            <div class="flex flex-row justify-between items-center">
+                <div class="flex flex-wrap">
+                    <div class="flex flex-col gap-2">
+                        <div>
+                            <span class="font-bold">{{'deals.pipeline' | translate}}: </span>
+                            <span>{{ pipelineSummary.pipelineTitle }}</span>
+                        </div>
+                        <div class="text-center">
+                            <span class="font-bold">{{'deals.win' | translate}}: </span>
+                            <span>{{ pipelineSummary.winCount }}</span>
+                        </div>
+                        <div class="text-center">
+                            <span class="font-bold">{{'deals.lose' | translate}}: </span>
+                            <span>{{ pipelineSummary.loseCount }}</span>
+                        </div>
+                        <div class="text-center">
+                            <span class="font-bold">{{'deals.in_progress' | translate}}: </span>
+                            <span>{{ pipelineSummary.inProgressCount }}</span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <div class="flex flex-row justify-between">
+                        <div class="font-semibold mr-2">{{ 'deals.currency' | translate }}</div>
+                        <p-autocomplete [(ngModel)]="currenciesSelectedAutoValue"
+                            [suggestions]="currenciesAutoFilteredValue" optionLabel="name"
+                            placeholder="{{ 'common.search' | translate }}" dropdown display="chip"
+                            (onSelect)="onCurrencyChange()" (completeMethod)="filterCurrencies($any($event))"
+                            appendTo="body" />
+                    </div>
+                    <div class="flex flex-row justify-between">
+                        <div class="font-semibold mr-2">{{ 'deals.sales_groups' | translate }}</div>
+                        <p-autocomplete [(ngModel)]="salesGroupSelectedAutoValue"
+                            [suggestions]="salesGroupsAutoFilteredValue" optionLabel="salesGroupName"
+                            placeholder="{{ 'common.search' | translate }}" dropdown display="chip"
+                            (onSelect)="onSalesGroupChange()" (completeMethod)="filterSalesGroups($any($event))"
+                            appendTo="body" />
+                    </div>
+                    <div class="flex flex-row justify-between">
+                        <div class="font-semibold mr-2">{{ 'deals.users' | translate }}</div>
+                        <p-autocomplete [(ngModel)]="usersSelectedAutoValue" [suggestions]="usersAutoFilteredValue"
+                            optionLabel="name" (onSelect)="onUserChange()"
+                            placeholder="{{ 'common.search' | translate }}" dropdown display="chip"
+                            (completeMethod)="filterUsers($any($event))" appendTo="body" />
+                    </div>
+                </div>
+                <div class="flex flex-wrap justify-end">
+                    <p-button label="{{ 'deals.new_deal' | translate}}" icon="pi pi-plus-circle" severity="secondary"
+                        (click)="onAddNewDeal()" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col">
+        <div class="card">
+            <div class="font-semibold text-xl">{{'deals.title' | translate}}</div>
+            <p-dataview [value]="products" [layout]="layout">
+                <ng-template #header>
+                    <div class="flex justify-end">
+                        <p-select-button [(ngModel)]="layout" [options]="options" [allowEmpty]="false">
+                            <ng-template #item let-option>
+                                <i class="pi "
+                                    [ngClass]="{ 'pi-bars': option === 'list', 'pi-table': option === 'grid' }"></i>
+                            </ng-template>
+                        </p-select-button>
+                    </div>
+                </ng-template>
+
+                <ng-template #list let-items>
+
+                    <div class="flex flex-col">
+                        <div *ngFor="let item of items; let i = index">
+                            <div class="flex flex-col sm:flex-row sm:items-center p-6 gap-4"
+                                [ngClass]="{ 'border-t border-surface': i !== 0 }">
+                                <div class="md:w-40 relative">
+                                    <img class="block xl:block mx-auto rounded w-full"
+                                        src="https://primefaces.org/cdn/primevue/images/product/{{ item.image }}"
+                                        [alt]="item.name" />
+                                    <div class="absolute bg-black/70 rounded-border"
+                                        [style]="{ left: '4px', top: '4px' }">
+                                        <p-tag [value]="item.inventoryStatus" severity="info"></p-tag>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+                                    <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                                        <div>
+                                            <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{
+                                                item.category }}</span>
+                                            <div class="text-lg font-medium mt-2">{{ item.name }} </div>
+                                        </div>
+                                        <div class="bg-surface-100 p-1" style="border-radius: 30px">
+                                            <div class="bg-surface-0 flex items-center gap-2 justify-center py-1 px-2"
+                                                style="
+                                                    border-radius: 30px;
+                                                    box-shadow:
+                                                        0px 1px 2px 0px rgba(0, 0, 0, 0.04),
+                                                        0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+                                                ">
+                                                <span class="text-surface-900 font-medium text-sm">{{ item.rating
+                                                    }}</span>
+                                                <i class="pi pi-star-fill text-yellow-500"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col md:items-end gap-8">
+                                        <span class="text-xl font-semibold">$ {{ item.price }}</span>
+                                        <div class="flex flex-row-reverse md:flex-row gap-2">
+                                            <p-button icon="pi pi-heart" styleClass="h-full"
+                                                [outlined]="true"></p-button>
+                                            <p-button icon="pi pi-shopping-cart" label="Buy Now"
+                                                [disabled]="item.inventoryStatus === 'OUTOFSTOCK'"
+                                                styleClass="flex-auto md:flex-initial whitespace-nowrap"></p-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+
+                <ng-template #grid let-items>
+                    <div class="card">
+                        <p-tabs [value]="selectedStage!.id" [scrollable]="true">
+                            <p-tablist>
+                                @for (stage of pipelineStages; track stage.id) {
+                                <p-tab [value]="stage.id" (click)="onStageChange(stage.id)">{{ stage.name }}</p-tab>
+                                }
+                            </p-tablist>
+                            <app-loading-spinner [loading]="loadDeals()" />
+                            <p-tabpanels *ngIf="!loadDeals()">
+                                @for (stage of pipelineStages; track stage.id) {
+                                <p-tabpanel [value]="stage.id">
+                                    <div *ngIf="stageDeals().length > 0" class="grid grid-cols-12 gap-4">
+                                        <div *ngFor="let deal of stageDeals(); let i = index"
+                                            class="col-span-12 sm:col-span-6 lg:col-span-4 p-2">
+                                            <div
+                                                class="p-3 border-2 border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex flex-col"
+                                                [style.border-color]="deal.dealStatus === 'O' ? 'var(--primary-color)' : null">
+                                                <div class="pt-2">
+                                                    <div class="flex flex-row justify-between items-start gap-2">
+                                                        <div>
+                                                            <div class="text-m font-medium mb-1 cursor-pointer text-blue-600 dark:text-blue-400"
+                                                                (click)="navigateToAddEditDeal(deal)">
+                                                                {{ deal.dealTitle }} {{ deal.dealStatus }}
+                                                            </div>
+                                                            <span
+                                                                class="font-medium text-surface-500 dark:text-surface-400 text-sm">
+                                                                {{ deal.orgName }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex flex-col mt-2">
+                                                        <div class="flex flex-wrap justify-end gap-1">
+                                                            <p-button icon="pi pi-trophy" [outlined]="true" size="small"
+                                                                pTooltip="{{'deals.win' | translate}}"
+                                                                (click)="onWinDeal(deal)"></p-button>
+                                                            <p-button icon="pi pi-thumbs-down-fill" [outlined]="true"
+                                                                size="small" pTooltip="{{'deals.lose' | translate}}"
+                                                                (click)="onLoseDeal(deal)"></p-button>
+                                                            <p-button icon="pi pi-trash" [outlined]="true" size="small"
+                                                                pTooltip="{{'deals.delete_deal' | translate}}"
+                                                                (click)="onDeleteDeal(deal)"></p-button>
+                                                            <p-button icon="pi pi-lock" [outlined]="true" size="small"
+                                                                pTooltip="{{'deals.rotten_deal' | translate}}"
+                                                                (click)="onRottenDeal(deal)"></p-button>
+                                                            <p-button icon="pi pi-envelope" [outlined]="true"
+                                                                size="small"
+                                                                pTooltip="{{'deals.offering_deal' | translate}}"
+                                                                (click)="onOfferingDeal(deal)"></p-button>
+                                                            <p-button icon="pi pi-reply" [outlined]="true" size="small"
+                                                                pTooltip=""></p-button>
+                                                        </div>
+                                                        <span class="text-sm font-semibold mt-3 mb-2">
+                                                            $ {{ deal.dealValue }} {{ deal.currencyName }}
+                                                        </span>
+                                                        <span
+                                                            class="font-medium text-surface-500 dark:text-surface-400 text-sm">
+                                                            {{'deals.by' | translate}} {{ deal.createdBy }}
+                                                        </span>
+                                                        <div class="flex flex-wrap justify-center gap-1 mt-2">
+                                                            <p-button *ngIf="!isFirstStage()"
+                                                                icon="pi pi-angle-double-left" [outlined]="true"
+                                                                size="small"
+                                                                pTooltip="{{'deals.previous_stage' | translate}}"></p-button>
+                                                            <p-button *ngIf="!isLastStage()"
+                                                                icon="pi pi-angle-double-right" [outlined]="true"
+                                                                size="small"
+                                                                pTooltip="{{'deals.next_stage' | translate}}"></p-button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="stageDeals().length === 0" class="flex justify-center items-center p-4">
+                                        <p>{{ 'deals.no_deals_in_this_stage' | translate }}</p>
+                                    </div>
+                                </p-tabpanel>
+                                }
+                            </p-tabpanels>
+                        </p-tabs>
+                    </div>
+
+                </ng-template>
+            </p-dataview>
+        </div>
+    </div>
+
+    <add-deal-dialog [showDealDialog]="showDealDialog" />
+
+    <p-dialog [(visible)]="showDeleteDealDialog" [style]="{ width: '400px' }"
+        [header]="('deals.delete_deal' | translate) " [modal]="true">
+        <ng-template #content>
+            <div class="flex flex-col gap-6">
+                <div class="flex flex-col gap-2">
+                    <div class="flex flex-row gap-6">
+                        <div class="flex flex-col w-full">
+                            <label for="description" class="block font-bold mb-3">{{ 'deals.delete_reason' |
+                                translate }}</label>
+                            <textarea id="description" pTextarea [(ngModel)]="dealDialog.description" rows="3" cols="20"
+                                fluid></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template #footer>
+            <p-button label="{{ 'common.cancel' | translate }}" icon="pi pi-times" text
+                (click)="hideDeleteDealDialog()" />
+            <p-button label="{{ 'common.delete' | translate }}" icon="pi pi-trash" (click)="deleteDeal()" />
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="showWinDealDialog" [style]="{ width: '350px' }"
+        [header]="('deals.win_opportunity' | translate) " [modal]="true">
+        <ng-template #content>
+            <div class="flex flex-col gap-6">
+                <div class="flex flex-col gap-2">
+                    <div class="flex flex-col">
+                        <label for="dealValue" class="block font-bold mb-3">{{ 'deals.order_number' |
+                            translate
+                            }} *</label>
+                        <input type="number" pInputText id="dealValue" [(ngModel)]="dealDialog.dealValue" autofocus
+                            fluid />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="dealValue" class="block font-bold mb-3">{{ 'deals.agreed_value' |
+                            translate
+                            }} *</label>
+                        <input type="number" pInputText id="dealValue" [(ngModel)]="dealDialog.dealValue" autofocus
+                            fluid />
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="description" class="block font-bold mb-3">{{ 'deals.payment_terms' |
+                            translate }}</label>
+                        <textarea id="description" pTextarea [(ngModel)]="dealDialog.description" rows="3" cols="20"
+                            fluid></textarea>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="block font-bold mb-3">{{ 'deals.order_contract_issue_date' | translate }}</label>
+                        <p-datepicker [showIcon]="true" [showButtonBar]="true" [(ngModel)]="dealDialog.commitDate"
+                            appendTo="body"></p-datepicker>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template #footer>
+            <p-button label="{{ 'common.cancel' | translate }}" icon="pi pi-times" text (click)="hideWinDealDialog()" />
+            <p-button label="{{ 'common.save' | translate }}" icon="pi pi-save" (click)="saveWinDeal()" />
+        </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="showLoseDealDialog" [style]="{ width: '350px' }"
+        [header]="('deals.lose_reason' | translate) " [modal]="true">
+        <ng-template #content>
+            <div class="flex flex-col gap-6">
+                <div class="flex flex-col gap-2">
+                    <div class="flex flex-col mb-3">
+                        <label for="reason" class="block font-bold mb-3">{{ 'deals.reason' |
+                            translate }}</label>
+                        <div class="flex flex-col gap-4">
+                            @for(reason of lostReasons; track reason.id){
+                                <div class="flex items-center">
+                                    <p-radiobutton [id]="reason.id" name="reason" [value]="reason.id"
+                                    [(ngModel)]="loseDealRadioValue" />
+                                    <label [for]="reason.id" class="ml-2 text-sm font-medium text-gray">{{ reason.name }}</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="description" class="block font-bold mb-3">{{ 'deals.description' |
+                            translate }}</label>
+                        <textarea id="description" pTextarea [(ngModel)]="dealDialog.description" rows="3" cols="20"
+                            fluid></textarea>
+                    </div>
+
+                </div>
+            </div>
+        </ng-template>
+        <ng-template #footer>
+            <p-button label="{{ 'common.cancel' | translate }}" icon="pi pi-times" text
+                (click)="hideLoseDealDialog()" />
+            <p-button label="{{ 'common.save' | translate }}" icon="pi pi-save" (click)="saveLoseDeal()" />
+        </ng-template>
+    </p-dialog>
+
+    <p-confirmdialog [style]="{ width: '450px' }" />
+
+</div>

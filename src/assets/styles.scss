@@ -1,0 +1,39 @@
+/* You can add global styles to this file, and also import other style files */
+@use './tailwind.css';
+@use './layout/layout.scss';
+@use 'primeicons/primeicons.css';
+@use './demo/demo.scss';
+
+
+//
+
+/*
+ * Global styles for PrimeNG Table Headers
+ *
+ * You can add this to your main stylesheet (e.g., src/styles.scss)
+ * to apply a consistent header style across all p-table components
+ * in your application.
+ */
+.p-datatable .p-datatable-thead>tr>th {
+    background-color: var(--primary-color);
+
+    // background-color: color-mix(in srgb, var(--primary-color), transparent 50%);
+    /* Background color with 50% opacity */
+    color: #000;
+    border-color: var(--primary-color);
+    font-weight: 800;
+    /* A slightly thicker bottom border */
+    text-align: center;
+    /* Ensure text is aligned to the left */
+    padding: 0.5rem;
+    /* Add some padding */
+}
+
+.p-datatable .p-datatable-tbody>tr>td {
+    text-align: center;
+}
+
+/* Style for the sort icon color */
+.p-datatable .p-datatable-thead>tr>th .p-sortable-column-icon {
+    color: #343a40;
+}

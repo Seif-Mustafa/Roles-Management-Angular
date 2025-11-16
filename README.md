@@ -1,59 +1,55 @@
-# Sakai19
+# Roles Management Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.5.
+This is a single-page application built with Angular for managing user roles and permissions. It provides a clean, responsive, and intuitive interface for administrators to perform CRUD (Create, Read, Update, Delete) operations on roles and view associated users.
 
-## Development server
+The project is built using modern Angular features, including Signals, and leverages the powerful [PrimeNG](https://primeng.org/) component library for a rich user experience.
 
-To start a local development server, run:
+## ✨ Key Features
 
-```bash
-ng serve
-```
+- **Role Management**: Easily create, read, update, and delete roles.
+- **Interactive Data Table**: A feature-rich table displays all roles with:
+  - Pagination
+  - Sorting
+  - Global text search
+- **View Role Users**: Click a button to see a list of all users assigned to a specific role in a dialog.
+- **Modern UI/UX**: A responsive and clean interface built with PrimeNG components like tables, dialogs, and toolbars.
+- **State Management**: Uses Angular Signals for efficient and reactive state management.
+- **Internationalization**: Text and labels are managed with `ngx-translate` for easy localization.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🛠️ Tech Stack
 
-## Code scaffolding
+- **Framework**: Angular
+- **UI Components**: PrimeNG
+- **Icons**: PrimeIcons
+- **Internationalization**: ngx-translate
+- **Styling**: PrimeFlex CSS utility library
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🚀 Getting Started
 
-```bash
-ng generate component component-name
-```
+To get a local copy up and running, follow these simple steps.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Prerequisites
 
-```bash
-ng generate --help
-```
+- Node.js (v18.x or later)
+- Angular CLI
 
-## Building
+### Installation
 
-To build the project run:
+1.  Clone the repo:
+    ```sh
+    git clone https://github.com/Seif-Mustafa/Roles-Management-Angular.git
+    ```
+2.  Navigate to the project directory:
+    ```sh
+    cd Roles-Management-Angular
+    ```
+3.  Install NPM packages:
+    ```sh
+    npm install
+    ```
+4.  Run the development server:
+    ```sh
+    ng serve
+    ```
+5.  Open your browser and navigate to `http://localhost:4200/`.
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

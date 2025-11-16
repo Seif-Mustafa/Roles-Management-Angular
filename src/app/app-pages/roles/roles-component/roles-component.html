@@ -1,0 +1,154 @@
+<p-toast />
+<app-loading-spinner [loading]="loading()"></app-loading-spinner>
+@if (!loading()) {
+<div>
+  <p-toolbar styleClass="mb-6">
+    <ng-template #start>
+      <p-button label="{{'roles.add_role' |translate}}" icon="pi pi-plus" severity="secondary"
+        (onClick)="onAddRole()" />
+    </ng-template>
+    <ng-template #end>
+      <!-- <p-button label="{{'roles.export_excel' | translate}}" icon="pi pi-upload" severity="secondary"
+        (onClick)="exportCSV()" /> -->
+    </ng-template>
+  </p-toolbar>
+  <div class="card">
+    <p-table #dt [value]="roles()" [rows]="10" [paginator]="true"
+      [globalFilterFields]="['roleName', 'description', 'isActive']" [tableStyle]="{ 'min-width': '50rem' }"
+      [rowHover]="true" dataKey="roleId"
+      currentPageReportTemplate="{{ 'common.showing' | translate }} {first} to {last} of {totalRecords} {{ 'roles.title' | translate }}"
+      [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]">
+      <ng-template #caption>
+        <div class="flex justify-between items-center flex-column sm:flex-row">
+          <h5 class="m-0">{{ 'roles.roles' | translate }}</h5>
+          <p-iconfield iconPosition="left" class="ml-auto">
+            <p-inputicon>
+              <i class="pi pi-search"></i>
+            </p-inputicon>
+            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
+              placeholder="{{ 'common.search' | translate }}" />
+          </p-iconfield>
+        </div>
+      </ng-template>
+      <ng-template #header>
+        <tr>
+          <th pSortableColumn="roleName" style="min-width:12rem">
+            {{ 'roles.role_name' | translate }}
+            <p-sortIcon field="roleName" />
+          </th>
+          <th pSortableColumn="description" style="min-width:12rem">
+            {{ 'roles.description' | translate }}
+            <p-sortIcon field="description" />
+          </th>
+          <th pSortableColumn="isActive" style="min-width:12rem">
+            {{ 'roles.is_active' | translate }}
+            <p-sortIcon field="isActive" />
+          </th>
+          <th style="min-width:8rem">
+            {{ 'common.actions' | translate }}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-role>
+        <tr>
+
+          <td style="min-width: 12rem">{{ role.roleName }}</td>
+          <td style="min-width: 12rem">{{ role.description }}</td>
+          <td style="min-width: 4rem">
+            <p-tag [value]="(role.isActive === 'Y' ? 'common.active' : 'common.in_active') | translate "
+              [severity]="role.isActive === 'Y' ?'success':'danger'" />
+          </td>
+          <td>
+            <p-button icon="pi pi-user" class="mr-2" [rounded]="true" [outlined]="true" (click)="viewRoleUsers(role)"
+              pTooltip="{{'roles.view_role_users' | translate}}" />
+            <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editRole(role)"
+              pTooltip="{{'roles.edit_role' | translate}}" />
+            <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteRole(role)"
+              pTooltip="{{'roles.delete_role' | translate}}" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <p-dialog [(visible)]="showRoleDialog" [style]="{ width: '400px' }" header="{{ 'roles.role_details' | translate }}"
+    [modal]="true">
+    <ng-template #content>
+      <div class="flex flex-col gap-6">
+        <div>
+          <label for="role-name" class="block font-bold mb-3">{{ 'roles.role_name' | translate }}</label>
+          <input type="text" pInputText id="role-name" [(ngModel)]="tempRole!.roleName" fluid />
+        </div>
+        <div>
+          <label for="role-description" class="block font-bold mb-3">{{ 'roles.description' | translate }}</label>
+          <textarea pTextarea [placeholder]="'roles.description' | translate" [autoResize]="true" rows="3" cols="45"
+            [(ngModel)]="tempRole!.description"></textarea>
+        </div>
+        <div class="flex items-center gap-3">
+          <label for="active-role" class="font-semibold">{{ 'roles.is_active' | translate }}</label>
+          <p-toggleswitch [(ngModel)]="tempRole!.isActive" inputId="active-role" trueValue="Y" falseValue="N" />
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #footer>
+      <p-button label="{{ 'common.cancel' | translate }}" icon="pi pi-times" text (click)="hideRoleDialog()" />
+      <p-button label="{{ 'common.save' | translate }}" icon="pi pi-check" (click)="saveRole()" />
+    </ng-template>
+  </p-dialog>
+
+  <p-dialog [(visible)]="showRoleUsersDialog" [style]="{ width: '600px' }" header="{{ 'roles.role_users' | translate }}"
+    [modal]="true">
+    <ng-template #content>
+      <p-table #dtu [value]="tempRoleUsers()" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['username', 'isActive']" [tableStyle]="{ 'min-width': '40rem' }" [rowHover]="true"
+        dataKey="userId"
+        currentPageReportTemplate="{{ 'common.showing' | translate }} {first} to {last} of {totalRecords} {{ 'roles.users' | translate }}"
+        [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]">
+        <ng-template #caption>
+          <div class="flex justify-between items-center flex-column sm:flex-row">
+            <p-iconfield iconPosition="left" class="ml-auto">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input pInputText type="text" (input)="onGlobalFilter(dtu, $event)"
+                placeholder="{{ 'common.search' | translate }}" />
+            </p-iconfield>
+          </div>
+        </ng-template>
+        <ng-template #header>
+          <tr>
+            <th pSortableColumn="username" style="min-width:12rem">
+              {{ 'roles.username' | translate }}
+              <p-sortIcon field="username" />
+            </th>
+            <th pSortableColumn="isActive" style="min-width:12rem">
+              {{ 'roles.is_active' | translate }}
+              <p-sortIcon field="isActive" />
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-user>
+          <tr>
+            <td style="min-width: 12rem">{{ user.username }}</td>
+            <td style="min-width: 4rem">
+              <p-tag [value]="(user.isActive === 'Y' ? 'common.active' : 'common.in_active') | translate "
+                [severity]="user.isActive === 'Y' ?'success':'danger'" />
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #emptymessage>
+          <tr>
+            <td colspan="3" class="text-center">{{ 'roles.no_users_assigned_to_this_role' | translate }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ng-template>
+
+    <ng-template #footer>
+      <p-button label="{{ 'common.close' | translate }}" icon="pi pi-times" text (click)="hideRoleUsersDialog()" />
+    </ng-template>
+  </p-dialog>
+
+  <p-confirmdialog [style]="{ width: '450px' }" />
+</div>
+}
