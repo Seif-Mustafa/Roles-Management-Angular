@@ -24,6 +24,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { User } from '@/app-pages/users/model/user.model';
 import { Tooltip } from 'primeng/tooltip';
 import { RoleUser } from '../model/role-user.model';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-roles-component',
@@ -62,7 +63,8 @@ export class RolesComponent implements OnInit {
         private rolesService: RolesService,
         private toastService: ToastService,
         private confirmationService: ConfirmationService,
-        private layoutService: LayoutService
+        private layoutService: LayoutService,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -176,6 +178,9 @@ export class RolesComponent implements OnInit {
         }
     }
 
+    navigateToRoleDetails(role: Role) {
+        this.router.navigate([`/app/roles/role-details/${role.roleId}`]);
+    }
     validateRole(): boolean {
         if (this.tempRole?.roleName.length === 0) {
             this.toastService.error('common.error', 'roles.role_name_required');

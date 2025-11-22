@@ -78,12 +78,6 @@
           <label for="username" class="block font-bold mb-3">{{ 'users.username' | translate }}</label>
           <input type="text" pInputText id="username" [(ngModel)]="tempUser!.appUsername" fluid />
         </div>
-        @if(!tempUser?.userId){
-        <div>
-          <label for="password" class="block font-bold mb-3">{{ 'users.password' | translate }}</label>
-          <p-password id="password" [(ngModel)]="tempUser!.appPassword" [toggleMask]="true" fluid />
-        </div>
-        }
         <div>
           <label for="email" class="block font-bold mb-3">{{ 'users.email' | translate }}</label>
           <input type="email" pInputText id="email" [(ngModel)]="tempUser!.email" fluid />

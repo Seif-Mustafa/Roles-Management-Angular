@@ -5,7 +5,7 @@ import { Documentation } from './app/pages/documentation/documentation';
 import { Landing } from './app/pages/landing/landing';
 import { Notfound } from './app/pages/notfound/notfound';
 import { AuthGuard } from '@/layout/service/auth.guard';
-import { Login } from '@/login/page/login';
+import { Login } from '@/login/login-component/login-component';
 import { ActivitiesComponent } from '@/crm-pages/activities/activities-component/activities-component';
 
 export const templateRoutes: Routes = [

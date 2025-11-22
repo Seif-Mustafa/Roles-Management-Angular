@@ -32,7 +32,7 @@
       </ng-template>
       <ng-template #header>
         <tr>
-          <th pSortableColumn="roleName" style="min-width:12rem">
+          <th pSortableColumn="roleName" style="min-width:10rem">
             {{ 'roles.role_name' | translate }}
             <p-sortIcon field="roleName" />
           </th>
@@ -40,11 +40,11 @@
             {{ 'roles.description' | translate }}
             <p-sortIcon field="description" />
           </th>
-          <th pSortableColumn="isActive" style="min-width:12rem">
+          <th pSortableColumn="isActive" style="min-width:4rem">
             {{ 'roles.is_active' | translate }}
             <p-sortIcon field="isActive" />
           </th>
-          <th style="min-width:8rem">
+          <th style="min-width:10rem">
             {{ 'common.actions' | translate }}
           </th>
         </tr>
@@ -52,13 +52,15 @@
       <ng-template #body let-role>
         <tr>
 
-          <td style="min-width: 12rem">{{ role.roleName }}</td>
+          <td style="min-width: 10rem">{{ role.roleName }}</td>
           <td style="min-width: 12rem">{{ role.description }}</td>
           <td style="min-width: 4rem">
             <p-tag [value]="(role.isActive === 'Y' ? 'common.active' : 'common.in_active') | translate "
               [severity]="role.isActive === 'Y' ?'success':'danger'" />
           </td>
           <td>
+            <p-button icon="pi pi-list" class="mr-2" [rounded]="true" [outlined]="true" (click)="navigateToRoleDetails(role)"
+              pTooltip="{{'roles.role_details' | translate}}"/>
             <p-button icon="pi pi-user" class="mr-2" [rounded]="true" [outlined]="true" (click)="viewRoleUsers(role)"
               pTooltip="{{'roles.view_role_users' | translate}}" />
             <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editRole(role)"

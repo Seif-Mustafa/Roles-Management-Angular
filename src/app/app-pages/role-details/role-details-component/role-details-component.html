@@ -1,0 +1,167 @@
+<p-toast />
+<app-loading-spinner [loading]="loading()"></app-loading-spinner>
+@if (!loading()) {
+<div class="flex flex-col gap-6">
+  <p-toolbar>
+    <ng-template #start>
+      <p-button label="{{'common.back' |translate}}" icon="pi pi-arrow-circle-left" severity="secondary"
+        (onClick)="backToRolesList()" class="mr-4" />
+      <p-button label="{{'common.save' |translate}}" icon="pi pi-save" severity="secondary"
+        (onClick)="saveRoleDetails()" />
+    </ng-template>
+    <ng-template #end>
+      <p-button label="{{'common.delete' |translate}}" icon="pi pi-trash" severity="danger" (onClick)="deleteRole()" />
+    </ng-template>
+  </p-toolbar>
+  <div class="grid grid-cols-12 gap-6">
+    <div class="col-span-12 lg:col-span-6">
+      <div class="card">
+        <p-table #dtp [value]="roleDetails.pages" [rows]="10" [paginator]="true" [globalFilterFields]="['pageName']"
+          [tableStyle]="{ 'min-width': '16rem' }" [rowHover]="true" dataKey="pageId"
+          currentPageReportTemplate="{{ 'common.showing' | translate }} {first} to {last} of {totalRecords} {{ 'role_details.pages' | translate }}"
+          [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]">
+          <ng-template #caption>
+            <div class="flex justify-between items-center flex-column sm:flex-row">
+              <h5 class="m-0">{{ 'role_details.pages' | translate }}</h5>
+              <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                  <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input pInputText type="text" (input)="onGlobalFilter(dtp, $event)"
+                  placeholder="{{ 'common.search' | translate }}" />
+              </p-iconfield>
+            </div>
+          </ng-template>
+          <ng-template #header>
+            <tr>
+              <th pSortableColumn="pageName" style="min-width:8rem">
+                {{ 'role_details.name' | translate }}
+                <p-sortIcon field="pageName" />
+              </th>
+              <th pSortableColumn="isActive" style="min-width:4rem">
+                {{ 'common.active' | translate }}
+                <p-sortIcon field="isActive" />
+              </th>
+              <th style="min-width:4rem">
+                {{ 'common.selected' | translate }}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-page>
+            <tr>
+              <td style="min-width: 8rem">{{ page.pageName }}</td>
+              <td style="min-width: 4rem">
+                <p-tag [value]="(page.isActive === 'Y' ? 'common.active' : 'common.in_active') | translate "
+                  [severity]="page.isActive === 'Y' ?'success':'danger'" />
+              </td>
+              <td style="min-width:4rem">
+                <p-checkbox name="isSelected" [(ngModel)]="page.isSelected" [binary]="true" [trueValue]="'Y'"
+                  [falseValue]="'N'" />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+    <div class="col-span-12 lg:col-span-6">
+      <div class="card">
+        <p-table #dtb [value]="roleDetails.buttons" [rows]="10" [paginator]="true" [globalFilterFields]="['buttonName']"
+          [tableStyle]="{ 'min-width': '16rem' }" [rowHover]="true" dataKey="buttonId"
+          currentPageReportTemplate="{{ 'common.showing' | translate }} {first} to {last} of {totalRecords} {{ 'role_details.buttons' | translate }}"
+          [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]">
+          <ng-template #caption>
+            <div class="flex justify-between items-center flex-column sm:flex-row">
+              <h5 class="m-0">{{ 'role_details.buttons' | translate }}</h5>
+              <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                  <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input pInputText type="text" (input)="onGlobalFilter(dtb, $event)"
+                  placeholder="{{ 'common.search' | translate }}" />
+              </p-iconfield>
+            </div>
+          </ng-template>
+          <ng-template #header>
+            <tr>
+              <th pSortableColumn="buttonName" style="min-width:8rem">
+                {{ 'role_details.name' | translate }}
+                <p-sortIcon field="buttonName" />
+              </th>
+              <th pSortableColumn="isActive" style="min-width:4rem">
+                {{ 'common.active' | translate }}
+                <p-sortIcon field="isActive" />
+              </th>
+              <th style="min-width:4rem">
+                {{ 'common.selected' | translate }}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-button>
+            <tr>
+              <td style="min-width: 8rem">{{ button.buttonName }}</td>
+              <td style="min-width: 4rem">
+                <p-tag [value]="(button.isActive === 'Y' ? 'common.active' : 'common.in_active') | translate "
+                  [severity]="button.isActive === 'Y' ?'success':'danger'" />
+              </td>
+              <td style="min-width:4rem">
+                <p-checkbox name="isSelected" [(ngModel)]="button.isSelected" [binary]="true" [trueValue]="'Y'"
+                  [falseValue]="'N'" />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+    <div class="col-span-12 lg:col-span-6">
+      <div class="card">
+        <p-table #dtu [value]="roleDetails.users" [rows]="10" [paginator]="true" [globalFilterFields]="['username']"
+          [tableStyle]="{ 'min-width': '16rem' }" [rowHover]="true" dataKey="userId"
+          currentPageReportTemplate="{{ 'common.showing' | translate }} {first} to {last} of {totalRecords} {{ 'role_details.users' | translate }}"
+          [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]">
+          <ng-template #caption>
+            <div class="flex justify-between items-center flex-column sm:flex-row">
+              <h5 class="m-0">{{ 'role_details.users' | translate }}</h5>
+              <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                  <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input pInputText type="text" (input)="onGlobalFilter(dtu, $event)"
+                  placeholder="{{ 'common.search' | translate }}" />
+              </p-iconfield>
+            </div>
+          </ng-template>
+          <ng-template #header>
+            <tr>
+              <th pSortableColumn="username" style="min-width:8rem">
+                {{ 'role_details.name' | translate }}
+                <p-sortIcon field="username" />
+              </th>
+              <th pSortableColumn="isActive" style="min-width:4rem">
+                {{ 'common.active' | translate }}
+                <p-sortIcon field="isActive" />
+              </th>
+              <th style="min-width:4rem">
+                {{ 'common.selected' | translate }}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template #body let-user>
+            <tr>
+              <td style="min-width: 8rem">{{ user.username }}</td>
+              <td style="min-width: 4rem">
+                <p-tag [value]="(user.isActive === 'Y' ? 'common.active' : 'common.in_active') | translate "
+                  [severity]="user.isActive === 'Y' ?'success':'danger'" />
+              </td>
+              <td style="min-width:4rem">
+                <p-checkbox name="isSelected" [(ngModel)]="user.isSelected" [binary]="true" [trueValue]="'Y'"
+                  [falseValue]="'N'" />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+</div>
+}
