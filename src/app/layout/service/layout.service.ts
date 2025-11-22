@@ -1,4 +1,4 @@
-import { LoggedUser } from '@/login/models/loggeduser.model';
+import { LoggedUser } from '@/layout/model/loggeduser.model';
 import { Injectable, effect, signal, computed } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Subject } from 'rxjs';

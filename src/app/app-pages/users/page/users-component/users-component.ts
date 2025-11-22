@@ -84,7 +84,6 @@ export class UsersComponent implements OnInit {
             userId: undefined,
             appUsername: '',
             email: '',
-            appPassword: '',
             isActive: 'N',
             actionBy: this.layoutService.getLoggedUser()?.userId!
         };
@@ -173,9 +172,6 @@ export class UsersComponent implements OnInit {
     validateUser(): boolean {
         if (this.tempUser?.appUsername.length === 0) {
             this.toastService.error('common.error', 'users.username_is_required');
-            return false;
-        } else if (this.tempUser?.appPassword.length === 0) {
-            this.toastService.error('common.error', 'users.password_is_required');
             return false;
         } else if (this.tempUser?.email.length === 0) {
             this.toastService.error('common.error', 'users.email_is_required');
