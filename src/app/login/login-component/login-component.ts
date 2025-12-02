@@ -13,13 +13,17 @@ import { LoggedUser } from '../../layout/model/loggeduser.model';
 import { MessageService, ToastMessageOptions } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { UserLogin } from '../models/user-login.model';
+import { Dialog } from 'primeng/dialog';
+import { ForgetPassword } from '../models/forget-password.model';
+import { TranslateModule } from '@ngx-translate/core';
+import { ToastService } from '@/common/services/toast.service';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator, ToastModule],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator, ToastModule, Dialog, TranslateModule],
     templateUrl: 'login-component.html',
-    providers: [MessageService]
+    providers: [MessageService, ToastService]
 })
 export class Login {
     userLogin: UserLogin = {
@@ -28,11 +32,19 @@ export class Login {
         rememberMe: false
     };
 
+    forgetPassword: ForgetPassword = {
+        username: '',
+        email: ''
+    };
+
+    showForgetPasswordDialog: boolean = false;
+
     constructor(
         private router: Router,
         private loginService: LoginService,
         private layoutService: LayoutService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private toastService: ToastService
     ) {}
 
     // Method to login user
@@ -50,9 +62,34 @@ export class Login {
                 this.router.navigate(['/dashboard']);
             },
             error: (error) => {
-                this.showErrorViaToast(error.message);
+                this.showErrorViaToast(error.error.message);
             }
         });
+    }
+
+    sendForgetPassword(): void {
+        this.loginService.forgetPassword(this.forgetPassword).subscribe({
+            next: (res) => {
+                this.toastService.success('common.success', 'login.user_received_an_email_with_the_new_password');
+            },
+            error: (httpErrorResponse) => {
+                this.showErrorViaToast(httpErrorResponse);
+            }
+        });
+    }
+    displayForgetPasswordDialog() {
+        this.showForgetPasswordDialog = true;
+        this.forgetPassword = {
+            username: '',
+            email: ''
+        };
+    }
+    hideForgetPasswordDialog() {
+        this.showForgetPasswordDialog = false;
+        this.forgetPassword = {
+            username: '',
+            email: ''
+        };
     }
 
     showErrorViaToast(detail: string) {

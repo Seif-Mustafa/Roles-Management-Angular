@@ -134,7 +134,6 @@ export class AddDealDialog implements OnInit {
                 this.toastService.error("common.error", "common.failed_to_load_data");
             }, complete: () => {
                 this.loading.set(false);
-                console.log("complete ");
             }
         });
     }
@@ -243,14 +242,12 @@ export class AddDealDialog implements OnInit {
             })) || []
         };
 
-        console.log('Deal Payload:', dealPayload);
         this.loading.set(true);
         this.addDealService.postDeal(dealPayload).subscribe({
             next: (response: GenericResponse) => {
 
             },
             error: (error: any) => {
-                console.log(`THE ERROR IS: ${error}`)
             },
             complete: () => {
                 this.toastService.success("common.success", "common.deal_added_successfully");

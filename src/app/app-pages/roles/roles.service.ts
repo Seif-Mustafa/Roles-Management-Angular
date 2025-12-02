@@ -17,7 +17,7 @@ export class RolesService {
     ) {
         this.headers = new HttpHeaders({
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${this.layoutService.getLoggedUser()?.token}`,
+            'Authorization': `Bearer ${this.layoutService.getLoggedUser()?.token}`,
             'Action-By': this.layoutService.getLoggedUser()?.userId!
         });
     }

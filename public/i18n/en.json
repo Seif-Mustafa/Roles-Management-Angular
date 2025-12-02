@@ -2,7 +2,7 @@
   "common": {
     "active": "Active",
     "in_active": "Inactive",
-    "is_active":  "Is Active",
+    "is_active": "Is Active",
     "search": "Search",
     "saved_successfully": "Saved successfully",
     "new": "New",
@@ -10,6 +10,7 @@
     "actions": "Actions",
     "cancel": "Cancel",
     "save": "Save",
+    "send": "Send",
     "showing": "Showing",
     "yes": "Yes",
     "no": "No",
@@ -21,7 +22,7 @@
     "error": "Error",
     "warning": "Warning",
     "failed_to_load_data": "Failed to load data",
-    "failed_to_save_changes":"Failed to save the changes",
+    "failed_to_save_changes": "Failed to save the changes",
     "all": "All",
     "call": "Call",
     "meeting": "Meeting",
@@ -46,7 +47,12 @@
     "selected": "selected",
     "this_page_is_still_under_development": "This Page is still under development",
     "some_features_may_not_be_fully_functional": "Some features may not be fully functional"
-
+  },
+  "login": {
+    "forget_password": "Forget Password",
+    "username": "Username",
+    "email": "Email",
+    "user_received_an_email_with_the_new_password":"User received an email with the new password"
   },
   "home": {
     "title": "Home",
@@ -101,7 +107,8 @@
     "title": "Get Started",
     "documentation": "Documentation",
     "view_source": "View Source"
-  },  "app_pages": {
+  },
+  "app_pages": {
     "title": "Roles Management",
     "users": "Users",
     "roles": "Roles"
@@ -148,16 +155,21 @@
     "delete_role": "Delete Role",
     "failed_to_load_role_users": "Failed to load role users",
     "role_users": "Role Users",
-    "users":"Users",
-    "username":"Username",
+    "users": "Users",
+    "username": "Username",
     "no_users_assigned_to_this_role": "No users assigned to this role"
   },
-  "role_details":{
-    "pages":"Pages",
-    "name":"Name",
-    "buttons":"Buttons",
-    "users":"Users"
-
-
+  "role_details": {
+    "pages": "Pages",
+    "name": "Name",
+    "buttons": "Buttons",
+    "users": "Users"
+  },
+  "user_details": {
+    "roles": "Roles",
+    "name": "Name",
+    "username": "Username",
+    "email": "Email",
+    "is_active": "Is Active"
   }
 }

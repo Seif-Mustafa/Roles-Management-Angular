@@ -45,14 +45,35 @@
               <p-checkbox [(ngModel)]="userLogin.rememberMe" id="rememberme1" binary class="mr-2"></p-checkbox>
               <label for="rememberme1">Remember me</label>
             </div>
-            <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
+            <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" (click)="displayForgetPasswordDialog()">Forgot password?</span>
           </div>
           <p-button label="Sign In" styleClass="w-full" (click)="login()"></p-button>
           <div class="text-center mt-6 text-surface-500">
-            <span class="text-sm font-bold">Deployment Date: 10/28/2025</span>
+            <span class="text-sm font-bold">Deployment Date: 12/1/2025</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<p-dialog [(visible)]="showForgetPasswordDialog" [style]="{ width: '450px' }" header="{{ 'login.forget_password' | translate }}"
+  [modal]="true">
+  <ng-template #content>
+    <div class="flex flex-col gap-6">
+      <div>
+        <label for="username" class="block font-bold mb-3">{{ 'login.username' | translate }}</label>
+        <input type="text" pInputText id="username" [(ngModel)]="forgetPassword.username" fluid />
+      </div>
+      <div>
+        <label for="email" class="block font-bold mb-3">{{ 'login.email' | translate }}</label>
+        <input type="email" pInputText id="email" [(ngModel)]="forgetPassword.email" fluid />
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footer>
+    <p-button label="{{ 'common.cancel' | translate }}" icon="pi pi-times" text (click)="hideForgetPasswordDialog()" />
+    <p-button label="{{ 'common.send' | translate }}" icon="pi pi-check" (click)="sendForgetPassword()" />
+  </ng-template>
+</p-dialog>
