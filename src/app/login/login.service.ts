@@ -4,14 +4,21 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { GenericResponse } from '@/common/models/generic.response.model';
 import { UserLogin } from './models/user-login.model';
+import { ForgetPassword } from './models/forget-password.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class LoginService {
-    private postUrl = `${environment.apiUrl}/auth/login`;
-
+    headers: HttpHeaders;
+    constructor(private http: HttpClient) {
+        this.headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        });
+    }
     checkCredentials(userLogin: UserLogin): Observable<GenericResponse> {
+        const postUrl = `${environment.apiUrl}/auth/login`;
+
         if (userLogin.username === 'development' && userLogin.password === 'test1234') {
             return new Observable<GenericResponse>((observer) => {
                 observer.next({
@@ -28,12 +35,12 @@ export class LoginService {
                 observer.complete();
             });
         }
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json'
-        });
 
-        return this.http.post<GenericResponse>(this.postUrl, userLogin, { headers });
+        return this.http.post<GenericResponse>(postUrl, userLogin, { headers: this.headers });
     }
 
-    constructor(private http: HttpClient) {}
+    forgetPassword(forgetPassword: ForgetPassword): Observable<GenericResponse> {
+        const postUrl = `${environment.apiUrl}/auth/forget-password`;
+        return this.http.post<GenericResponse>(postUrl, forgetPassword, { headers: this.headers });
+    }
 }

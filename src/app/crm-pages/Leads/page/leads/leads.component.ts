@@ -161,7 +161,6 @@ export class LeadsComponent {
         // this.rows = data.map(this.mapLeadRow);
         // this.loading = false;
         this.activities = (res?.data as ActivityCradDto[]) ?? [];
-        console.log("activitiesCard>", this.activities)
         this.loading = false;
       },
       error: (err) => {

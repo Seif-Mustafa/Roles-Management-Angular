@@ -1,13 +1,13 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { User } from '../../model/user.model';
-import { UsersService } from '../../users.service';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { User } from '../model/user.model';
+import { UsersService } from '../users.service';
 import { ToastService } from '@/common/services/toast.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast, ToastModule } from 'primeng/toast';
 import { LoadingSpinnerComponent } from '@/common/components/loading-spinner.component';
 import { ButtonModule } from 'primeng/button';
 import { TranslateModule } from '@ngx-translate/core';
-import { Table, TableModule } from 'primeng/table';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -22,6 +22,8 @@ import { CommonModule } from '@angular/common';
 import { LayoutService } from '@/layout/service/layout.service';
 import { Tooltip } from 'primeng/tooltip';
 import { Role } from '@/app-pages/roles/model/role.model';
+import { Router } from '@angular/router';
+import { GenericResponse } from '@/common/models/generic.response.model';
 
 @Component({
     selector: 'app-users-component',
@@ -49,29 +51,65 @@ import { Role } from '@/app-pages/roles/model/role.model';
 })
 export class UsersComponent implements OnInit {
     users = signal<User[]>([]);
-    loading = signal<boolean>(true);
+    loading = signal<boolean>(false);
     tempUser: User | null = null;
     tempUserRoles = signal<Role[]>([]);
     showUserDialog: boolean = false;
     showUserRolesDialog: boolean = false;
+    globalFilterValue = signal<string>('');
+
+    @ViewChild('dt') dt: Table | undefined;
+
+    tableRowsCount = signal<number>(5);
+    totalRecords = signal<number>(0);
+
+    page: number = 0;
+    size: number = 5;
+
     constructor(
         private usersService: UsersService,
         private toastService: ToastService,
         private confirmationService: ConfirmationService,
-        private layoutService: LayoutService
+        private layoutService: LayoutService,
+        private router: Router
     ) {}
     ngOnInit() {
         this.loadUsers();
     }
 
-    loadUsers() {
+    tableLoading(event: TableLazyLoadEvent) {
         this.loading.set(true);
-        this.usersService.getAllUsers().subscribe({
-            next: (response) => {
-                this.users.set(response.data as User[]);
+
+        this.page = (event.first ?? 0) / (event.rows ?? 5);
+        this.size = event.rows ?? 5;
+
+        // Sorting
+        const sortField = event.sortField ?? 'userId';
+        const sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
+        const sort = `${sortField},${sortOrder}`;
+
+        // Search
+        let search = '';
+        if (event.filters && event.filters['global']) {
+            const filterValue = event.filters['global'];
+            if (!Array.isArray(filterValue)) {
+                search = filterValue.value ?? '';
+            }
+        }
+
+        this.loadUsers(search);
+    }
+
+    loadUsers(filter?:string): void {
+        this.usersService.getAllUsersPaginationFiltering(this.page, this.size,filter).subscribe({
+            next: (response: GenericResponse) => {
+                const pageData = response.data;
+                this.users.set(pageData.content);
+                this.totalRecords.set(pageData.page.totalElements);
+                this.tableRowsCount.set(this.size);
                 this.loading.set(false);
             },
-            error: (error) => {
+            error: () => {
                 this.toastService.error('common.error', 'users.failed_to_load_users');
                 this.loading.set(false);
             }
@@ -89,10 +127,15 @@ export class UsersComponent implements OnInit {
         };
     }
 
-    onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-    }
+onGlobalFilter(table: Table, event: any) {
+    const value = event.target.value;
+    this.globalFilterValue.set(value);
+    table.filterGlobal(value, 'contains');
+}
 
+    navigateToUserDetails(user: User) {
+        this.router.navigate([`/app/users/user-details/${user.userId}`]);
+    }
     viewUserRoles(user: User) {
         this.loading.set(true);
         this.usersService.getUserRoles(user.userId!).subscribe({
@@ -121,7 +164,7 @@ export class UsersComponent implements OnInit {
                 this.usersService.deleteUser(user.userId!).subscribe({
                     next: (response) => {
                         this.toastService.success('common.success', 'users.user_deleted_successfully');
-                        this.loadUsers();
+                        // this.loadUsers();
                     },
                     error: (error) => {
                         this.toastService.error('common.error', error.message);
@@ -148,7 +191,7 @@ export class UsersComponent implements OnInit {
             this.usersService.createUser(this.tempUser!).subscribe({
                 next: (response) => {
                     this.toastService.success('common.success', 'users.user_created_successfully');
-                    this.loadUsers();
+                    // this.loadUsers();
                     this.hideUserDialog();
                 },
                 error: (error) => {
@@ -159,7 +202,7 @@ export class UsersComponent implements OnInit {
             this.usersService.updateUser(this.tempUser).subscribe({
                 next: (response) => {
                     this.toastService.success('common.success', 'users.user_updated_successfully');
-                    this.loadUsers();
+                    // this.loadUsers();
                     this.hideUserDialog();
                 },
                 error: (error) => {
