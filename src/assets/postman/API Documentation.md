@@ -1,55 +1,462 @@
-Roles Management APIThis document provides comprehensive documentation for the Roles Management backend API, based on the provided Spring Boot Postman collection. It includes TypeScript data contracts essential for building type-safe Angular services.🚀 Getting StartedThis API uses JSON over HTTP and requires a Bearer Token for most authenticated endpoints.VariableDescriptionExample{{baseUrl}}The root URL of the API.http://localhost:8080/api/{{token}}Authorization Bearer Token (obtained via /auth/login).Bearer eyJhbGciOiJIUzI1NiI...1. 📝 Data Contracts (TypeScript Interfaces)Define these interfaces in your Angular application (e.g., in a shared/models/api.model.ts file) for strong typing.1.1 Core Entities// Base Entity for Audit Fields
-export interface AuditableEntity {
-    createdBy?: number | null;
-    createdOn?: string | null;
-    modifiedBy?: number | null;
-    modifiedOn?: string | null;
-    actionBy: number; // Required for CUD (Create/Update/Delete) operations
-}
+# **📘 Roles Management API Documentation**
 
-// User Entity
-export interface User extends AuditableEntity {
-    userId: number;
-    appUsername: string;
-    email: string;
-    // 'Y' for active, 'N' for inactive
-    isActive: 'Y' | 'N'; 
-    appPassword?: string; // Used only for specific operations like password change
-}
+A clean, structured API reference based on the provided Postman collection.
 
-// Role Entity
-export interface Role extends AuditableEntity {
-    roleId: number;
-    roleName: string;
-    description: string;
-}
+---
 
-// Used for complex assignment/edit forms (custom interface based on the endpoint)
-export interface AssignableEntity {
-    pageId?: number; 
-    buttonId?: number; 
-    roleId?: number; 
-    userId?: number; 
-    isSelected: 'Y' | 'N';
-}
-1.2 Generic Response and PaginationThis structure is used for all API communication.// Spring Data JPA Page Content Structure
-export interface SpringPage<T> {
-    content: T[]; 
-    page: { 
-        size: number; 
-        number: number;
-        totalElements: number; // Total number of records available
-        totalPages: number;
-    };
-}
+# **🔐 Authentication**
 
-// Generic API Response Wrapper
-export interface GenericResponse<T> {
-    success: boolean;
-    message: string;
-    timestamp: string;
-    data: T; // The actual data payload (e.g., User, Role, SpringPage<User>)
-    status: number;
-    path: string;
+## **POST /auth/login**
+
+Authenticate and obtain a JWT token.
+
+### **Request Body**
+
+```json
+{
+  "username": "seifadmin",
+  "password": "pass123"
 }
-2. 🔑 Authentication Endpoints (/auth)These endpoints manage user login and credential recovery.MethodEndpointDescriptionRequest Body (Example)Response Body (Data Type)POST{{baseUrl}}auth/loginAuthenticate and obtain an authorization token.{ "username": "...", "password": "..." }GenericResponse<{ token: string }>POST{{baseUrl}}auth/forget-passwordInitiate the password reset workflow.{ "username": "...", "email": "..." }GenericResponse<any>3. 👤 User Management Endpoints (/user)Endpoints for CRUD operations on User entities.MethodEndpointDescriptionRequest Body (Example)Response Body (Data Type)GET{{baseUrl}}user/paginationList Users (Paginated/Sorted).NoneGenericResponse<SpringPage<User>>GET{{baseUrl}}user/pagination-filterList Users with Global Search.NoneGenericResponse<SpringPage<User>>GET{{baseUrl}}user/{id}Retrieve a single User by ID.NoneGenericResponse<User>POST{{baseUrl}}userCreate a new User.{ "appUsername": "...", "email": "...", "isActive": "Y", "actionBy": 1 }GenericResponse<User>PUT{{baseUrl}}user/{id}Update basic User details.{ "appUsername": "...", "email": "...", "isActive": "Y", "actionBy": 1 }GenericResponse<User>DELETE{{baseUrl}}user/{id}Delete a User.NoneGenericResponse<any>PUT{{baseUrl}}user/{id}/change-passwordChange a User's password.{ "oldPassword": "...", "newPassword": "..." }GenericResponse<any>GET{{baseUrl}}user/user-details/{id}Get user details and assigned roles for editing.NoneGenericResponse<UserDetailModel>PUT{{baseUrl}}user/user-details/{id}Update User details and role assignments.Complex JSON PayloadGenericResponse<any>GET{{baseUrl}}user/{id}/rolesGet all roles assigned to a specific user.NoneGenericResponse<Role[]>Pagination Query Parameters:ParameterTypeRequiredDescriptionExamplepagenumberYesThe page index (0-based).?page=0sizenumberYesRecords per page.&size=5sortstringNoField and optional direction.&sort=email,descfilterstringNoGlobal search string (for /pagination-filter).&filter=test4. 👑 Role Management Endpoints (/roles)Endpoints for CRUD operations on Role entities.MethodEndpointDescriptionRequest Body (Example)Response Body (Data Type)GET{{baseUrl}}roles/paginationList Roles (Paginated/Sorted).NoneGenericResponse<SpringPage<Role>>GET{{baseUrl}}roles/pagination-filterList Roles with Global Search.NoneGenericResponse<SpringPage<Role>>GET{{baseUrl}}roles/{id}Retrieve a single Role by ID.NoneGenericResponse<Role>POST{{baseUrl}}rolesCreate a new Role.{ "roleName": "...", "description": "...", "actionBy": 1 }GenericResponse<Role>PUT{{baseUrl}}roles/{id}Update an existing Role.{ "roleName": "...", "description": "...", "actionBy": 1 }GenericResponse<Role>DELETE{{baseUrl}}roles/{id}Delete a Role.NoneGenericResponse<any>GET{{baseUrl}}roles/role-details/{id}Get role details and assigned pages/buttons for editing.NoneGenericResponse<RoleDetailModel>PUT{{baseUrl}}roles/role-details/{id}Update Role details and page/button assignments.Complex JSON PayloadGenericResponse<any>GET{{baseUrl}}roles/{id}/usersGet all users assigned to a specific role.NoneGenericResponse<User[]>5. 🤝 Relationship Management EndpointsEndpoints for managing many-to-many associations.5.1 User-Role Association (/user-role)MethodEndpointDescriptionRequest Body (Example)POST{{baseUrl}}user-roleAssign a Role to a User.{ "userId": 1, "roleId": 4, "actionBy": 1 }DELETE{{baseUrl}}user-roleUnassign a Role from a User.{ "userId": 1, "roleId": 4 }5.2 Page-Role Association (/page-role)MethodEndpointDescriptionRequest Body (Example)POST{{baseUrl}}page-roleAssign a Page to a Role.{ "roleId": 2, "pageId": 6, "actionBy": 1 }DELETE{{baseUrl}}page-roleUnassign a Page from a Role.{ "roleId": 2, "pageId": 3 }5.3 Button-Role Association (/button-role)MethodEndpointDescriptionRequest Body (Example)POST{{baseUrl}}button-roleAssign a Button to a Role.{ "roleId": 1, "buttonId": 1, "actionBy": 1 }DELETE{{baseUrl}}button-roleUnassign a Button from a Role.{ "roleId": 1, "buttonId": 1 }
+```
+
+### **Response**
+
+Returns a JWT token inside `data.token`.
+
+---
+
+## **POST /auth/forget-password**
+
+Initiates password recovery.
+
+### **Request Body**
+
+```json
+{
+  "username": "seifadmin",
+  "email": "test@example.com"
+}
+```
+
+---
+
+---
+
+# **👤 User Endpoints**
+
+---
+
+## **POST /user**
+
+Create a new user.
+
+### **Headers**
+
+```
+Authorization: {{token}}
+```
+
+### **Request Body**
+
+```json
+{
+  "appUsername": "TEST USER",
+  "email": "testuser@gmail.com",
+  "isActive": "Y",
+  "actionBy": 1
+}
+```
+
+---
+
+## **PUT /user/{id}**
+
+Update a user.
+
+### **Request Body**
+
+```json
+{
+  "appUsername": "seifadmin",
+  "email": "seif.mostafa.projects@gmail.com",
+  "isActive": "Y",
+  "actionBy": 1
+}
+```
+
+---
+
+## **DELETE /user/{id}**
+
+Delete a user.
+
+### **Headers**
+
+```
+Authorization: {{token}}
+```
+
+---
+
+## **GET /user/{id}**
+
+Get user by ID.
+
+---
+
+## **GET /user**
+
+List all users.
+
+---
+
+## **GET /user/active**
+
+Return all active users.
+
+---
+
+## **GET /user/in-active**
+
+Return inactive users.
+
+---
+
+## **GET /user/{id}/roles**
+
+Get roles assigned to a specific user.
+
+---
+
+## **GET /user/{id}/pages**
+
+Get pages assigned to a user.
+
+---
+
+## **GET /user/{id}/buttons**
+
+Get buttons assigned to a user.
+
+---
+
+## **PUT /user/{id}/change-password**
+
+Change user password.
+
+### **Request Body**
+
+```json
+{
+  "oldPassword": "F4yx&@5V",
+  "newPassword": "dev1234"
+}
+```
+
+---
+
+## **GET /user/user-details/{id}**
+
+Get full user details (info + roles).
+
+---
+
+## **PUT /user/user-details/{id}**
+
+Update user + role assignments.
+
+### **Request Body**
+
+```json
+{
+  "userId": 11,
+  "username": "onemore",
+  "email": "onemore@gmail.com",
+  "isActive": "N",
+  "modifiedBy": 1,
+  "roles": [
+    { "roleId": 1, "isSelected": "Y" },
+    { "roleId": 2, "isSelected": "Y" },
+    { "roleId": 3, "isSelected": "N" },
+    { "roleId": 5, "isSelected": "N" }
+  ]
+}
+```
+
+---
+
+## **GET /user/pagination**
+
+Paginated users.
+
+### **Query Parameters**
+
+```
+page=0
+size=5
+sort=userId
+```
+
+---
+
+## **GET /user/pagination-filter**
+
+Paginated + filtered users.
+
+### **Query Parameters**
+
+```
+page=0
+size=5
+sort=userId
+filter=hash
+```
+
+---
+
+---
+
+# **👑 Role Endpoints**
+
+---
+
+## **POST /roles**
+
+Create a new role.
+
+### **Request Body**
+
+```json
+{
+  "roleName": "First Role",
+  "description": "Dummy description",
+  "actionBy": 1
+}
+```
+
+---
+
+## **PUT /roles/{id}**
+
+Update a role.
+
+### **Request Body**
+
+```json
+{
+  "roleName": "Second Role",
+  "description": "Second Role Description",
+  "actionBy": 1
+}
+```
+
+---
+
+## **DELETE /roles/{id}**
+
+Delete a role.
+
+---
+
+## **GET /roles/{id}**
+
+Get role by ID.
+
+---
+
+## **GET /roles**
+
+List all roles.
+
+---
+
+## **GET /roles/{id}/users**
+
+Get users assigned to a role.
+
+---
+
+## **GET /roles/{id}/pages**
+
+Get pages assigned to a role.
+
+---
+
+## **GET /roles/{id}/buttons**
+
+Get buttons assigned to a role.
+
+---
+
+## **GET /roles/role-details/{id}**
+
+Get role details including pages & buttons.
+
+---
+
+## **PUT /roles/role-details/{id}**
+
+Update role details + pages + buttons.
+
+### **Request Body (Full Example)**
+
+This contains all pages and buttons with `isSelected: "Y"/"N"`:
+
+```json
+{
+  "roleId": 1,
+  "roleName": "Admin (Edited)",
+  "roleDescription": "This role contains all pages",
+  "isActive": "Y",
+  "pages": [
+    { "pageId": 7, "isSelected": "Y" },
+    { "pageId": 8, "isSelected": "Y" }
+  ],
+  "buttons": [
+    { "buttonId": 1, "isSelected": "Y" },
+    { "buttonId": 2, "isSelected": "Y" }
+  ]
+}
+```
+
+---
+
+## **GET /roles/pagination**
+
+Paginated roles.
+
+### **Query Parameters**
+
+```
+page=1
+size=2
+sort=roleId
+```
+
+---
+
+## **GET /roles/pagination-filter**
+
+Paginated + filtered roles.
+
+### **Query Parameters**
+
+```
+page=0
+size=5
+sort=roleName,desc
+filter=<optional>
+```
+
+---
+
+---
+
+# **🤝 User–Role Endpoints**
+
+---
+
+## **POST /user-role**
+
+Assign a role to a user.
+
+### **Request Body**
+
+```json
+{
+  "userId": 1,
+  "roleId": 4,
+  "actionBy": 1
+}
+```
+
+---
+
+## **DELETE /user-role**
+
+Unassign a role from a user.
+
+### **Request Body**
+
+```json
+{
+  "userId": 1,
+  "roleId": 4
+}
+```
+
+---
+
+---
+
+# **🗂 Page–Role Endpoints**
+
+---
+
+## **POST /page-role**
+
+Assign a page to a role.
+
+### **Request Body**
+
+```json
+{
+  "roleId": 2,
+  "pageId": 6,
+  "actionBy": 1
+}
+```
+
+---
+
+## **DELETE /page-role**
+
+Remove page from role.
+
+### **Request Body**
+
+```json
+{
+  "roleId": 2,
+  "pageId": 3
+}
+```
+
+---
+
+---
+
+# **🔘 Button–Role Endpoints**
+
+---
+
+## **POST /button-role**
+
+Assign a button to a role.
+
+### **Request Body**
+
+```json
+{
+  "roleId": 1,
+  "buttonId": 1,
+  "actionBy": 1
+}
+```
+
+---
+
+## **DELETE /button-role**
+
+Unassign button from role.
+
+### **Request Body**
+
+```json
+{
+  "buttonId": 1,
+  "roleId": 1
+}
+```
+
+
