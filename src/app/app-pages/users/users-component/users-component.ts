@@ -63,6 +63,8 @@ export class UsersComponent implements OnInit {
     tableRowsCount = signal<number>(5);
     totalRecords = signal<number>(0);
 
+    sortField: string = 'userId';
+    sortOrder: number = 1;
     page: number = 0;
     size: number = 5;
 
@@ -77,17 +79,15 @@ export class UsersComponent implements OnInit {
         this.loadUsers();
     }
 
-    tableLoading(event: TableLazyLoadEvent) {
+    usersTableLoading(event: TableLazyLoadEvent) {
         this.loading.set(true);
-
         this.page = (event.first ?? 0) / (event.rows ?? 5);
         this.size = event.rows ?? 5;
 
         // Sorting
-        const sortField = event.sortField ?? 'userId';
-        const sortOrder = event.sortOrder === 1 ? 'asc' : 'desc';
-        const sort = `${sortField},${sortOrder}`;
-
+        this.sortField = Array.isArray(event.sortField) ? event.sortField[0] : (event.sortField ?? 'userId');
+        this.sortOrder = event.sortOrder ?? 1;
+        const sort = `${this.sortField},${this.sortOrder===1?'asc':'desc'}`;
         // Search
         let search = '';
         if (event.filters && event.filters['global']) {
@@ -97,11 +97,11 @@ export class UsersComponent implements OnInit {
             }
         }
 
-        this.loadUsers(search);
+        this.loadUsers(search,sort);
     }
 
-    loadUsers(filter?:string): void {
-        this.usersService.getAllUsersPaginationFiltering(this.page, this.size,filter).subscribe({
+    loadUsers(filter?: string, sort:string='userId,asc'): void {
+        this.usersService.getAllUsersPaginationFiltering(this.page, this.size, filter,sort).subscribe({
             next: (response: GenericResponse) => {
                 const pageData = response.data;
                 this.users.set(pageData.content);
@@ -127,11 +127,11 @@ export class UsersComponent implements OnInit {
         };
     }
 
-onGlobalFilter(table: Table, event: any) {
-    const value = event.target.value;
-    this.globalFilterValue.set(value);
-    table.filterGlobal(value, 'contains');
-}
+    onGlobalFilter(table: Table, event: any) {
+        const value = event.target.value;
+        this.globalFilterValue.set(value);
+        table.filterGlobal(value, 'contains');
+    }
 
     navigateToUserDetails(user: User) {
         this.router.navigate([`/app/users/user-details/${user.userId}`]);

@@ -21,20 +21,16 @@ export class UsersService {
         });
     }
 
-    getAllUsersPaginationFiltering(page: number, size: number, filter?:string): Observable<GenericResponse> {
+    getAllUsersPaginationFiltering(page: number, size: number, filter?:string, sort?:string): Observable<GenericResponse> {
         let params = new HttpParams();
 
         // 1. Add Pagination Parameters
         params = params.set('page', page.toString());
         params = params.set('size', size.toString());
         params = params.set('filter',filter||'');
+        params = params.set('sort', sort|| 'userId,asc');
 
-        // if (sortField) {
-        //     const sortDirection = sortOrder === 1 ? 'asc' : 'desc';
-        //     params = params.set('sort', `${sortField},${sortDirection}`);
-        // } else {
-            params = params.set('sort', 'userId,asc');
-        // }
+        
 
         const getUrl = `${environment.apiUrl}/user/pagination-filter`;
         return this.http.get<GenericResponse>(getUrl, {

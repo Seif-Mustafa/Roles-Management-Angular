@@ -1,6 +1,6 @@
 import { LoadingSpinnerComponent } from '@/common/components/loading-spinner.component';
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
@@ -10,7 +10,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
-import { Table, TableModule } from 'primeng/table';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
@@ -21,10 +21,10 @@ import { ToastService } from '@/common/services/toast.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { LayoutService } from '@/layout/service/layout.service';
 import { TextareaModule } from 'primeng/textarea';
-import { User } from '@/app-pages/users/model/user.model';
 import { Tooltip } from 'primeng/tooltip';
 import { RoleUser } from '../model/role-user.model';
 import { Router } from '@angular/router';
+import { GenericResponse } from '@/common/models/generic.response.model';
 
 @Component({
     selector: 'app-roles-component',
@@ -59,6 +59,16 @@ export class RolesComponent implements OnInit {
     showRoleDialog: boolean = false;
     showRoleUsersDialog: boolean = false;
 
+    globalFilterValue = signal<string>('');
+    @ViewChild('dt') dt: Table | undefined;
+    tableRowsCount = signal<number>(5);
+    totalRecords = signal<number>(0);
+
+    sortField: string = 'roleId';
+    sortOrder: number = 1;
+    page: number = 0;
+    size: number = 5;
+
     constructor(
         private rolesService: RolesService,
         private toastService: ToastService,
@@ -71,11 +81,32 @@ export class RolesComponent implements OnInit {
         this.loadRoles();
     }
 
-    loadRoles() {
+    rolesTableLoading(event: TableLazyLoadEvent) {
         this.loading.set(true);
-        this.rolesService.getAllRoles().subscribe({
-            next: (response) => {
-                this.roles.set(response.data as Role[]);
+        this.page = (event.first ?? 0) / (event.rows ?? 5);
+        this.size = event.rows ?? 5;
+
+        // Sorting
+        this.sortField = Array.isArray(event.sortField) ? event.sortField[0] : (event.sortField ?? 'roleId');
+        this.sortOrder = event.sortOrder ?? 1;
+        const sort = `${this.sortField},${this.sortOrder === 1?'asc':'desc'}`;
+        let search = '';
+        if (event.filters && event.filters['global']) {
+            const filterValue = event.filters['global'];
+            if (!Array.isArray(filterValue)) {
+                search = filterValue.value ?? '';
+            }
+        }
+        this.loadRoles(search, sort);
+    }
+
+    loadRoles(filters?: string, sort: string = 'roleId,asc'): void {
+        this.rolesService.getAllRolesPaginationFiltering(this.page, this.size, filters, sort).subscribe({
+            next: (response: GenericResponse) => {
+                const pageData = response.data;
+                this.roles.set(pageData.content);
+                this.totalRecords.set(pageData.page.totalElements);
+                this.tableRowsCount.set(this.size);
                 this.loading.set(false);
             },
             error: (error) => {
@@ -96,8 +127,10 @@ export class RolesComponent implements OnInit {
         };
     }
 
-    onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+    onGlobalFilter(table: Table, event: any) {
+        const value = event.target.value;
+        this.globalFilterValue.set(value);
+        table.filterGlobal(value, 'contains');
     }
 
     viewRoleUsers(role: Role) {
