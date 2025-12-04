@@ -6,7 +6,6 @@ import { Landing } from './app/pages/landing/landing';
 import { Notfound } from './app/pages/notfound/notfound';
 import { AuthGuard } from '@/layout/service/auth.guard';
 import { Login } from '@/login/login-component/login-component';
-import { ActivitiesComponent } from '@/crm-pages/activities/activities-component/activities-component';
 
 export const templateRoutes: Routes = [
     {
@@ -17,7 +16,7 @@ export const templateRoutes: Routes = [
             { path: 'dashboard', component: Dashboard },
             { path: 'uikit', loadChildren: () => import('./app/pages/uikit/uikit.routes') },
             { path: 'documentation', component: Documentation },
-            { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') }
+            { path: 'pamges', loadChildren: () => import('./app/pages/pages.routes') }
         ],
         canActivate: [AuthGuard]
     },

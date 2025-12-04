@@ -11,8 +11,8 @@ export interface RoleDetailsRequest {
         buttonId: number;
         isSelected: boolean;
     }[];
-    users: {
-        userId: number;
-        isSelected: boolean;
-    }[];
+    // users: {
+    //     userId: number;
+    //     isSelected: boolean;
+    // }[];
 }

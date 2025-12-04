@@ -13,11 +13,12 @@
     </ng-template>
   </p-toolbar>
   <div class="card">
-    <p-table #dt [value]="roles()" [rows]="10" [paginator]="true"
-      [globalFilterFields]="['roleName', 'description', 'isActive']" [tableStyle]="{ 'min-width': '50rem' }"
-      [rowHover]="true" dataKey="roleId"
+    <p-table #dt [value]="roles()" [rows]="tableRowsCount()" [paginator]="true"
+      [globalFilterFields]="['roleName', 'description']" [rowHover]="true" dataKey="roleId" [lazy]="true"
+      lazyLoadOnInit="false" (onLazyLoad)="rolesTableLoading($event)" [totalRecords]="totalRecords()"
+      [first]="page* tableRowsCount()" [sortField]="sortField" [sortOrder]="sortOrder"
       currentPageReportTemplate="{{ 'common.showing' | translate }} {first} to {last} of {totalRecords} {{ 'roles.title' | translate }}"
-      [showCurrentPageReport]="true" [rowsPerPageOptions]="[10, 20, 30]">
+      [showCurrentPageReport]="true" [rowsPerPageOptions]="[5, 10, 20, 30]">
       <ng-template #caption>
         <div class="flex justify-between items-center flex-column sm:flex-row">
           <h5 class="m-0">{{ 'roles.roles' | translate }}</h5>
@@ -25,7 +26,7 @@
             <p-inputicon>
               <i class="pi pi-search"></i>
             </p-inputicon>
-            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)"
+            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" [value]="globalFilterValue()"
               placeholder="{{ 'common.search' | translate }}" />
           </p-iconfield>
         </div>
@@ -59,8 +60,8 @@
               [severity]="role.isActive === 'Y' ?'success':'danger'" />
           </td>
           <td>
-            <p-button icon="pi pi-list" class="mr-2" [rounded]="true" [outlined]="true" (click)="navigateToRoleDetails(role)"
-              pTooltip="{{'roles.role_details' | translate}}"/>
+            <p-button icon="pi pi-list" class="mr-2" [rounded]="true" [outlined]="true"
+              (click)="navigateToRoleDetails(role)" pTooltip="{{'roles.role_details' | translate}}" />
             <p-button icon="pi pi-user" class="mr-2" [rounded]="true" [outlined]="true" (click)="viewRoleUsers(role)"
               pTooltip="{{'roles.view_role_users' | translate}}" />
             <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" (click)="editRole(role)"

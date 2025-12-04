@@ -1,6 +1,6 @@
 import { GenericResponse } from '@/common/models/generic.response.model';
 import { LayoutService } from '@/layout/service/layout.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -17,15 +17,23 @@ export class RolesService {
     ) {
         this.headers = new HttpHeaders({
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.layoutService.getLoggedUser()?.token}`,
+            Authorization: `Bearer ${this.layoutService.getLoggedUser()?.token}`,
             'Action-By': this.layoutService.getLoggedUser()?.userId!
         });
     }
 
-    getAllRoles(): Observable<GenericResponse> {
-        const getUrl = `${environment.apiUrl}/roles`;
+    getAllRolesPaginationFiltering(page: number, size: number, filter?: string, sort?: string): Observable<GenericResponse> {
+        let params = new HttpParams();
+        params = params.set('page', page.toString());
+        params = params.set('size', size.toString());
+        params = params.set('filter', filter || '');
+
+        params = params.set('sort', sort || 'roleId,asc');
+
+        const getUrl = `${environment.apiUrl}/roles/pagination-filter`;
 
         return this.http.get<GenericResponse>(getUrl, {
+            params: params,
             headers: this.headers
         });
     }

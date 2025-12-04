@@ -1,0 +1,1047 @@
+{
+	"info": {
+		"_postman_id": "53b9d851-7313-4dd5-931e-668bbcc70c61",
+		"name": "Roles Management Java Spring",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23472072"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"appUsername\": \"TEST USER\",\r\n    \"email\": \"testuser@gmail.com\",\r\n    \"isActive\": \"Y\",\r\n    \"actionBy\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}user",
+							"host": [
+								"{{baseUrl}}user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"appUsername\": \"seifadmin\",\r\n    // \"appPassword\": \"test1234\",\r\n    \"email\": \"seif.mostafa.projects@gmail.com\",\r\n    \"isActive\":\"Y\",\r\n    \"actionBy\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}user/1",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user/12",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"12"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user/1",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user",
+							"host": [
+								"{{baseUrl}}user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user/1/roles",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"1",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Pages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user/1/pages",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"1",
+								"pages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Active Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user/active",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "In Active Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user/in-active",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"in-active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Buttons",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user/1/buttons",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"1",
+								"buttons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Change Password",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"F4yx&@5V\",\r\n    \"newPassword\": \"dev1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}user/19/change-password",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"19",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user/user-details/1",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"user-details",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Details",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 11,\r\n    \"username\": \"onemore\",\r\n    \"email\": \"onemore@gmail.com\",\r\n    \"isActive\": \"N\",\r\n    \"modifiedBy\": 1,\r\n    \"roles\": [\r\n        {\r\n            \"roleId\": 1,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"roleId\": 2,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"roleId\": 3,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"roleId\": 5,\r\n            \"isSelected\": \"N\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}user/user-details/11",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"user-details",
+								"11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Pagination",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user/pagination?page=0&size=5&sort=userId",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"pagination"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "sort",
+									"value": "userId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Pagination Filtering",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}user/pagination-filter?page=0&size=5&sort=userId&filter=hash",
+							"host": [
+								"{{baseUrl}}user"
+							],
+							"path": [
+								"pagination-filter"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "sort",
+									"value": "userId"
+								},
+								{
+									"key": "filter",
+									"value": "hash"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Create Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roleName\": \"First Role\",\r\n    \"description\": \"Dummy description\",\r\n    \"actionBy\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}roles",
+							"host": [
+								"{{baseUrl}}roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roleName\": \"Second Role\",\r\n    \"description\": \"Second Role Description\",\r\n    \"actionBy\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}roles/2",
+							"host": [
+								"{{baseUrl}}roles"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}roles/3",
+							"host": [
+								"{{baseUrl}}roles"
+							],
+							"path": [
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role By ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}roles/2",
+							"host": [
+								"{{baseUrl}}roles"
+							],
+							"path": [
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}roles/1/users",
+							"host": [
+								"{{baseUrl}}roles"
+							],
+							"path": [
+								"1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}roles",
+							"host": [
+								"{{baseUrl}}roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Pages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}roles/2/pages",
+							"host": [
+								"{{baseUrl}}roles"
+							],
+							"path": [
+								"2",
+								"pages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Buttons",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}roles/1/buttons",
+							"host": [
+								"{{baseUrl}}roles"
+							],
+							"path": [
+								"1",
+								"buttons"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}roles/role-details/1",
+							"host": [
+								"{{baseUrl}}roles"
+							],
+							"path": [
+								"role-details",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Details",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roleId\": 1,\r\n    \"roleName\": \"Admin (Edited)\",\r\n    \"roleDescription\": \"This role contains app the pages in the application\",\r\n    \"isActive\": \"Y\",\r\n    \"pages\": [\r\n        {\r\n            \"pageId\": 7,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 8,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 9,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 10,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 11,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 12,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 13,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 14,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 15,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 16,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 17,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 18,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 19,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 20,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 21,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 22,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 23,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 24,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 25,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 26,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 27,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 28,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 29,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 30,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 31,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 33,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"pageId\": 34,\r\n            \"isSelected\": \"Y\"\r\n        }\r\n    ],\r\n    \"buttons\": [\r\n        {\r\n            \"buttonId\": 1,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"buttonId\": 2,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"buttonId\": 3,\r\n            \"isSelected\": \"Y\"\r\n        },\r\n        {\r\n            \"buttonId\": 4,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 5,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 6,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 7,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 8,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 9,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 10,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 11,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 12,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 13,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 14,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 15,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 16,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 17,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 18,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 19,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 20,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 21,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 22,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 23,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 24,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 25,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 26,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 27,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 28,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 29,\r\n            \"isSelected\": \"N\"\r\n        },\r\n        {\r\n            \"buttonId\": 30,\r\n            \"isSelected\": \"N\"\r\n        }\r\n    ],\r\n    // \"users\": [\r\n    //     {\r\n    //         \"userId\": 1,\r\n    //         \"isSelected\": \"Y\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 4,\r\n    //         \"isSelected\": \"Y\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 5,\r\n    //         \"isSelected\": \"Y\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 6,\r\n    //         \"isSelected\": \"Y\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 11,\r\n    //         \"isSelected\": \"N\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 13,\r\n    //         \"isSelected\": \"N\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 14,\r\n    //         \"isSelected\": \"N\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 15,\r\n    //         \"isSelected\": \"N\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 16,\r\n    //         \"isSelected\": \"N\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 17,\r\n    //         \"isSelected\": \"N\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 18,\r\n    //         \"isSelected\": \"N\"\r\n    //     },\r\n    //     {\r\n    //         \"userId\": 19,\r\n    //         \"isSelected\": \"N\"\r\n    //     }\r\n    // ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}roles/role-details/1",
+							"host": [
+								"{{baseUrl}}roles"
+							],
+							"path": [
+								"role-details",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Pagination",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}roles/pagination?page=1&size=2&sort=roleId",
+							"host": [
+								"{{baseUrl}}roles"
+							],
+							"path": [
+								"pagination"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "2"
+								},
+								{
+									"key": "sort",
+									"value": "roleId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Pagination Filtering",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}roles/pagination-filter?page=0&size=5&sort=roleName,desc&filter",
+							"host": [
+								"{{baseUrl}}roles"
+							],
+							"path": [
+								"pagination-filter"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "sort",
+									"value": "roleName,desc"
+								},
+								{
+									"key": "filter",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Role",
+			"item": [
+				{
+					"name": "Create User Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"roleId\":4,\r\n    \"actionBy\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}user-role",
+							"host": [
+								"{{baseUrl}}user-role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":1,\r\n    \"roleId\":4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}user-role",
+							"host": [
+								"{{baseUrl}}user-role"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Page Role",
+			"item": [
+				{
+					"name": "Create Page Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roleId\":2,\r\n    \"pageId\":6,\r\n    \"actionBy\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}page-role",
+							"host": [
+								"{{baseUrl}}page-role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Page Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roleId\":2,\r\n    \"pageId\":3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}page-role",
+							"host": [
+								"{{baseUrl}}page-role"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Button Role",
+			"item": [
+				{
+					"name": "Create Button Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roleId\":1,\r\n    \"buttonId\":1,\r\n    \"actionBy\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}button-role",
+							"host": [
+								"{{baseUrl}}button-role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Button Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"buttonId\":1,\r\n    \"roleId\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}button-role",
+							"host": [
+								"{{baseUrl}}button-role"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"seifadmin\",\r\n    \"password\":\"J%e8nRN@\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}auth/login",
+							"host": [
+								"{{baseUrl}}auth"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forget Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"seifadmin\",\r\n    \"email\":\"seif.mostafa.projects@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}auth/forget-password",
+							"host": [
+								"{{baseUrl}}auth"
+							],
+							"path": [
+								"forget-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}

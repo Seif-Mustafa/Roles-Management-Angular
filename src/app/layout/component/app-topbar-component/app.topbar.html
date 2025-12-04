@@ -1,10 +1,16 @@
- <div class="layout-topbar">
-        <div class="layout-topbar-logo-container">
-            <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
-                <i class="pi pi-bars"></i>
-            </button>
-            <a class="layout-topbar-logo" routerLink="/">
-                <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<div class="layout-topbar">
+  <div class="layout-topbar-logo-container">
+    <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
+      <i class="pi pi-bars"></i>
+    </button>
+    <a class="layout-topbar-logo" routerLink="/">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-16 mx-auto"
+        width="30" height="30" >
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+      <!-- <svg viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         fill-rule="evenodd"
                         clip-rule="evenodd"
@@ -20,57 +26,54 @@
                             fill="var(--primary-color)"
                         />
                     </g>
-                </svg>
-                <span>Roles Management</span>
-            </a>
-        </div>
+                </svg> -->
+      <span>Roles Management</span>
+    </a>
+  </div>
 
-        <div class="layout-topbar-actions">
-            <div class="layout-config-menu">
-                <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
-                    <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
-                </button>
-                <div class="relative">
-                    <button
-                        class="layout-topbar-action layout-topbar-action-highlight"
-                        pStyleClass="@next"
-                        enterFromClass="hidden"
-                        enterActiveClass="animate-scalein"
-                        leaveToClass="hidden"
-                        leaveActiveClass="animate-fadeout"
-                        [hideOnOutsideClick]="true"
-                    >
-                        <i class="pi pi-palette"></i>
-                    </button>
-                    <app-configurator />
-                </div>
-            </div>
-
-            <button type="button" class="layout-topbar-action" (click)="toggleLanguage()">
-                <i class="pi pi-globe"></i>
-            </button>
-
-            <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
-                <i class="pi pi-ellipsis-v"></i>
-            </button>
-
-            <div class="layout-topbar-menu hidden lg:block">
-                <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-calendar"></i>
-                        <span>Calendar</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action" (click)="profileMenu.toggle($event)">
-                        <i class="pi pi-user"></i>
-                        <span>Profile</span>
-                    </button>
-                </div>
-            </div>
-            
-        </div>
+  <div class="layout-topbar-actions">
+    <div class="layout-config-menu">
+      <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
+        <i
+          [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
+      </button>
+      <div class="relative">
+        <button class="layout-topbar-action layout-topbar-action-highlight" pStyleClass="@next" enterFromClass="hidden"
+          enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout"
+          [hideOnOutsideClick]="true">
+          <i class="pi pi-palette"></i>
+        </button>
+        <app-configurator />
+      </div>
     </div>
+
+    <button type="button" class="layout-topbar-action" (click)="toggleLanguage()">
+      <i class="pi pi-globe"></i>
+    </button>
+
+    <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden"
+      enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout"
+      [hideOnOutsideClick]="true">
+      <i class="pi pi-ellipsis-v"></i>
+    </button>
+
+    <div class="layout-topbar-menu hidden lg:block">
+      <div class="layout-topbar-menu-content">
+        <button type="button" class="layout-topbar-action">
+          <i class="pi pi-calendar"></i>
+          <span>Calendar</span>
+        </button>
+        <button type="button" class="layout-topbar-action">
+          <i class="pi pi-inbox"></i>
+          <span>Messages</span>
+        </button>
+        <button type="button" class="layout-topbar-action" (click)="profileMenu.toggle($event)">
+          <i class="pi pi-user"></i>
+          <span>Profile</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
 <p-menu #profileMenu [model]="profileMenuItems" [popup]="true"></p-menu>

@@ -17,6 +17,12 @@
     padding: 0.5rem 1.5rem;
 }
 
+.layout-sidebar-rtl  {
+  
+    right: 2rem !important;
+
+}
+
 .layout-menu {
     margin: 0;
     padding: 0;
@@ -158,6 +164,3 @@
     overflow: hidden;
     transition: max-height 1s ease-in-out;
 }
-
-
-// 

@@ -163,7 +163,10 @@
     "pages": "Pages",
     "name": "Name",
     "buttons": "Buttons",
-    "users": "Users"
+    "users": "Users",
+    "role_name":"Role Name",
+    "description":"Description",
+    "is_active":"Is Active"
   },
   "user_details": {
     "roles": "Roles",

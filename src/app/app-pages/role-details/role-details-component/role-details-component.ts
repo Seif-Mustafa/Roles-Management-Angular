@@ -18,10 +18,11 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { RoleDetailsRequest } from '../model/role-details.request.model';
+import { ToggleSwitch } from 'primeng/toggleswitch';
 
 @Component({
     selector: 'app-role-details-component',
-    imports: [CommonModule, ToastModule, InputTextModule, LoadingSpinnerComponent, Toolbar, Button, TranslateModule, TableModule, IconField, InputIcon, Tag, CheckboxModule, FormsModule],
+    imports: [CommonModule, ToastModule, InputTextModule, LoadingSpinnerComponent, Toolbar, Button, TranslateModule, TableModule, IconField, InputIcon, Tag, CheckboxModule, FormsModule, ToggleSwitch],
     templateUrl: './role-details-component.html',
     providers: [ToastService]
 })
@@ -46,7 +47,6 @@ export class RoleDetailsComponent implements OnInit {
                 next: (response) => {
                     this.roleDetails = response.data as RoleDetailsResponse;
                     this.loading.set(false);
-                    // console.log(this.roleDetails);
                 },
                 error: (error) => {
                     this.toastService.error('common.error', 'common.failed_to_load_data');
@@ -63,7 +63,6 @@ export class RoleDetailsComponent implements OnInit {
 
     saveRoleDetails() {
         const roleDetailsRequest: RoleDetailsRequest = this.mapToRoleDetailsRequest(this.roleDetails);
-
 
         this.roleDetailsService.saveRoleDetails(roleDetailsRequest).subscribe({
             next: (response) => {
@@ -90,18 +89,22 @@ export class RoleDetailsComponent implements OnInit {
             roleName: roleDetailsResponse.roleName,
             roleDescription: roleDetailsResponse.roleDescription,
             isActive: roleDetailsResponse.isActive,
-            pages: roleDetailsResponse.pages.map((page) => ({
-                pageId: page.pageId,
-                isSelected: page.isSelected
-            })),
-            buttons: roleDetailsResponse.buttons.map((button) => ({
-                buttonId: button.buttonId,
-                isSelected: button.isSelected
-            })),
-            users: roleDetailsResponse.users.map((user) => ({
-                userId: user.userId,
-                isSelected: user.isSelected
-            }))
+            pages: roleDetailsResponse.pages
+                .map((page) => ({
+                    pageId: page.pageId,
+                    isSelected: page.isSelected
+                }))
+                .filter((page) => page.isSelected),
+            buttons: roleDetailsResponse.buttons
+                .map((button) => ({
+                    buttonId: button.buttonId,
+                    isSelected: button.isSelected
+                }))
+                .filter((button) => button.isSelected)
+            // users: roleDetailsResponse.users.map((user) => ({
+            //     userId: user.userId,
+            //     isSelected: user.isSelected
+            // }))
         };
     }
 }
