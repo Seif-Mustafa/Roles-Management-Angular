@@ -7,6 +7,6 @@ import { Routes } from '@angular/router';
 export default [
     { path: 'users', data: { breadcrumb: 'Users' }, component: UsersComponent },
     { path: 'roles', data: { breadcrumb: 'Roles' }, component: RolesComponent },
-    { path: 'roles/role-details/:id', data: { breadcrumb: 'Role Details' }, component: RoleDetailsComponent },
-    { path: 'users/user-details/:id', data: { breadcrumb: 'User Details' }, component: UserDetailsComponent }
+    { path: 'roles/role-details/:id', data: { breadcrumb: [{label:'Roles', routerLink:'/app/roles'},{label:'Role Details', routerLink:'/roles/role-details/:id'}] }, component: RoleDetailsComponent },
+    { path: 'users/user-details/:id', data: { breadcrumb: [{  label:'Users', routerLink:'/app/users'},{label:'User Details', routerLink:''}] }, component: UserDetailsComponent }
 ] as Routes;
