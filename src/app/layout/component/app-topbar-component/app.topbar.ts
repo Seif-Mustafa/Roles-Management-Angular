@@ -12,18 +12,41 @@ import { MenuModule } from 'primeng/menu';
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, FormsModule, MenuModule
-    ],
+    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, FormsModule, MenuModule],
     templateUrl: 'app.topbar.html'
 })
 export class AppTopbar implements OnInit {
     items!: MenuItem[];
     currentLang: string;
 
-    constructor(public layoutService: LayoutService, private translate: TranslateService, private router: Router) {
+    constructor(
+        public layoutService: LayoutService,
+        private translate: TranslateService,
+        private router: Router
+    ) {
         this.currentLang = this.translate.currentLang;
 
+        this.defaultUserPreferences();
+    }
+
+    defaultUserPreferences(): void {
         const storedTheme = localStorage.getItem('appTheme');
+        const primaryColor = localStorage.getItem('primaryColor');
+        const surfaceColor = localStorage.getItem('surfaceColor');
+        const appPreset = localStorage.getItem('appPreset');
+        const menuMode = localStorage.getItem('menuMode');
+        if (primaryColor) {
+            this.layoutService.layoutConfig.update((state) => ({ ...state, primary: primaryColor }));
+        }
+        if (surfaceColor) {
+            this.layoutService.layoutConfig.update((state) => ({ ...state, surface: surfaceColor }));
+        }
+        if (appPreset) {
+            this.layoutService.layoutConfig.update((state) => ({ ...state, preset: appPreset }));
+        }
+        if (menuMode) {
+            this.layoutService.layoutConfig.update((state) => ({ ...state, menuMode: menuMode }));
+        }
         if (storedTheme) {
             const isDark = JSON.parse(storedTheme);
             this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: isDark }));

@@ -45,7 +45,9 @@ export class Login {
         private layoutService: LayoutService,
         private messageService: MessageService,
         private toastService: ToastService
-    ) {}
+    ) {
+        this.defaultUserPreferences();
+    }
 
     // Method to login user
     login(): void {
@@ -65,6 +67,30 @@ export class Login {
                 this.showErrorViaToast(error.error.message);
             }
         });
+    }
+
+    defaultUserPreferences(): void {
+        const storedTheme = localStorage.getItem('appTheme');
+        const primaryColor = localStorage.getItem('primaryColor');
+        const surfaceColor = localStorage.getItem('surfaceColor');
+        const appPreset = localStorage.getItem('appPreset');
+        const menuMode = localStorage.getItem('menuMode');
+        if (primaryColor) {
+            this.layoutService.layoutConfig.update((state) => ({ ...state, primary: primaryColor }));
+        }
+        if (surfaceColor) {
+            this.layoutService.layoutConfig.update((state) => ({ ...state, surface: surfaceColor }));
+        }
+        if (appPreset) {
+            this.layoutService.layoutConfig.update((state) => ({ ...state, preset: appPreset }));
+        }
+        if (menuMode) {
+            this.layoutService.layoutConfig.update((state) => ({ ...state, menuMode: menuMode }));
+        }
+        if (storedTheme) {
+            const isDark = JSON.parse(storedTheme);
+            this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: isDark }));
+        }
     }
 
     sendForgetPassword(): void {
